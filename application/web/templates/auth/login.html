@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block body %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for class, message in messages %}
+                <div class="alert alert-{{class}} text-center fixed-top">
+                    <i class="glyphicon glyphicon-check" ></i> &nbsp;
+                    {{ message }}
+                </div>
+                {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+<div class="container">
+        <div class="col-md-5 text-center" style="float: none; margin: 0 auto;">
+            <img src="{{ url_for('static', filename='images/poopak_logo.jpg')}}">
+            <hr/>
+        </div>
+    <div class="clearfix"></div>
+    <div class="row">
+        <form action="{{url_for('auth.login')}}" method="POST" name="form" class="form">
+            <div class="col-md-4" style="float: none; margin: 0 auto;">
+                <div class="form-login">
+                    <h4 class="text-center">LOGIN</h4>
+                    {{ form.hidden_tag() }}
+                    {{ form.csrf_token() }}
+                    <table class="table">
+                        <tr>
+                            <td colspan="2">
+                                {{ form.username(class='form-control chat-input', placeholder="username") }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                {{ form.password(class="form-control chat-input", placeholder="password") }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                 {{captcha()}}
+                            </td>
+                            <td>
+                                {{form.captcha(class="form-control chat-input", style="margin: 0 auto;", placeholder="Enter captcha")}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                {{form.submit(class="btn btn-primary")}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+{% endblock %}

@@ -1,0 +1,43 @@
+[[source]]
+
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+
+[packages]
+
+lxml = "*"
+aiohttp = "*"
+cssselect = "*"
+aiosocks = "*"
+atq = "*"
+flask = "*"
+flask-paginate = "*"
+flask-pymongo = "*"
+flask-wtf = "*"
+itsdangerous = "*"
+"jinja2" = "*"
+markupsafe = "*"
+pymongo = "*"
+werkzeug = "*"
+wtforms = "*"
+captcha = "*"
+redis = "*"
+rq = "*"
+flask-login = "*"
+dateutils = "*"
+dramatiq = "*"
+flask-script = "*"
+"flask-rq2" = "*"
+
+
+[dev-packages]
+
+sanic = "*"
+motor = "*"
+
+
+[requires]
+
+python_version = "3.6"

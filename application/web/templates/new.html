@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block body %}
+
+<div class="col-md-10" style="float: none; margin: 0 auto;">
+
+    <div class="col-md-6">
+        <div class="list-group">
+
+
+            <form method="post" action="{{ url_for('search.add_onion') }}" >
+                    {{ add_form.csrf_token() }}
+                <ul class="list-group">
+                  <li class="list-group-item text-center active">
+                    <i class="glyphicon glyphicon-ok-sign" style="color: white;"></i> &nbsp;
+                    Add a new onion service
+                  </li>
+
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for class, message in messages %}
+                                <li class="list-group-item list-group-item-{{class}} text-center">
+                                    <i class="glyphicon glyphicon-alert" ></i> &nbsp;
+                                    {{ message }}
+                                </li>
+                                {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                  <li class="list-group-item">
+                    {{add_form.url(class="form-control", style="height: 55px; font-size: 16px;" ,placeholder="http://xxxxxxxxxxxxxxxx.onion")}}
+                  </li>
+                    <li class="list-group-item text-center">
+                     {{captcha()}}
+                    </li>
+                    <li class="list-group-item text-center">
+                    {{add_form.captcha(class="form-control", style="width: 50%; margin: 0 auto;", placeholder="Enter captcha")}}
+                    </li>
+                    <li class="list-group-item list-group-item-warning text-center">
+                      <i class="glyphicon glyphicon-alert" style="color: red;"></i> &nbsp; Please don't add child abuse material.</li>
+                    </li>
+                    <li class="list-group-item text-center" >
+                     {{add_form.submit(class="btn btn-success")}}
+                    </li>
+                </ul>
+        </form>
+
+</div>
+    </div>
+
+    <div class="col-md-6">
+        <ul class="list-group">
+            <li class="list-group-item active">
+Tor: Onion Service Protocol
+            </li>
+
+          <li class="list-group-item">
+            Tor makes it possible for users to hide their locations while offering various kinds of services,
+              such as web publishing or an instant messaging server. Using Tor "rendezvous points,"
+              other Tor users can connect to these onion services, formerly known as hidden services,
+              each without knowing the other's network identity. For more information check <a href="https://www.torproject.org/docs/onion-services" target="_blank">Tor project documentation</a>
+              </p>
+          </li>
+        </ul>
+    </div>
+
+</div>
+
+{%endblock%}

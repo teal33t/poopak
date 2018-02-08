@@ -1,0 +1,163 @@
+.alert {
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+}
+
+.alert-heading {
+  color: inherit;
+}
+
+.alert-link {
+  font-weight: bold;
+}
+
+.alert-dismissible .close {
+  position: relative;
+  top: -0.75rem;
+  right: -1.25rem;
+  padding: 0.75rem 1.25rem;
+  color: inherit;
+}
+
+.alert-success {
+  background-color: #dff0d8;
+  border-color: #d0e9c6;
+  color: #3c763d;
+}
+
+.alert-success hr {
+  border-top-color: #c1e2b3;
+}
+
+.alert-success .alert-link {
+  color: #2b542c;
+}
+
+.alert-info {
+  background-color: #d9edf7;
+  border-color: #bcdff1;
+  color: #31708f;
+}
+
+.alert-info hr {
+  border-top-color: #a6d5ec;
+}
+
+.alert-info .alert-link {
+  color: #245269;
+}
+
+.alert-warning {
+  background-color: #fcf8e3;
+  border-color: #faf2cc;
+  color: #8a6d3b;
+}
+
+.alert-warning hr {
+  border-top-color: #f7ecb5;
+}
+
+.alert-warning .alert-link {
+  color: #66512c;
+}
+
+.alert-danger {
+  background-color: #f2dede;
+  border-color: #ebcccc;
+  color: #a94442;
+}
+
+.alert-danger hr {
+  border-top-color: #e4b9b9;
+}
+
+.alert-danger .alert-link {
+  color: #843534;
+}
+
+
+.btn .badge {
+  position: relative;
+  top: -1px;
+}
+
+a.badge:focus, a.badge:hover {
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.badge-pill {
+  padding-right: 0.6em;
+  padding-left: 0.6em;
+  border-radius: 10rem;
+}
+
+.badge-default {
+  background-color: #636c72;
+}
+
+.badge-default[href]:focus, .badge-default[href]:hover {
+  background-color: #4b5257;
+}
+
+.badge-primary {
+  background-color: #0275d8;
+}
+
+.badge-primary[href]:focus, .badge-primary[href]:hover {
+  background-color: #025aa5;
+}
+
+.badge-success {
+  background-color: #5cb85c;
+}
+
+.badge-success[href]:focus, .badge-success[href]:hover {
+  background-color: #449d44;
+}
+
+.badge-info {
+  background-color: #5bc0de;
+}
+
+.badge-info[href]:focus, .badge-info[href]:hover {
+  background-color: #31b0d5;
+}
+
+.badge-warning {
+  background-color: #f0ad4e;
+}
+
+.badge-warning[href]:focus, .badge-warning[href]:hover {
+  background-color: #ec971f;
+}
+
+.badge-danger {
+  background-color: #d9534f;
+}
+
+.badge-danger[href]:focus, .badge-danger[href]:hover {
+  background-color: #c9302c;
+}
+
+.form-login {
+    background-color: #EDEDED;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 15px;
+    border-color:#d2d2d2;
+    border-width: 5px;
+    box-shadow:0 1px 0 #cfcfcf;
+}
+
+.dashboard{
+  padding: 10px;
+  border: solid 1px #cccc;
+  border-radius: 5px;
+}
+

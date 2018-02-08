@@ -1,0 +1,95 @@
+version: '3'
+
+networks:
+  app-tier:
+    driver: bridge
+
+
+services:
+  #data bus
+  redis:
+    image: 'bitnami/redis:latest'
+    hostname: redis
+    ports:
+      - '6379:6379'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - app-tier
+
+  mongodb:
+    image: 'bitnami/mongodb:latest'
+    hostname: mongodb
+    volumes:
+      - .:/bitnami
+    ports:
+      - "27017:27017"
+    environment:
+        - MONGODB_ROOT_PASSWORD=54nn4n
+        - MONGODB_USERNAME=admin
+        - MONGODB_PASSWORD=54nn4n
+    networks:
+      - app-tier
+
+  # proxy load balancer
+  torpool:
+    image: 'zeta0/alpine-tor'
+    hostname: torpool
+    ports:
+      - "5566:5566"
+      - "2090:2090"
+    environment:
+      - tors=1
+    networks:
+      - default
+      - app-tier
+
+
+  # application
+  web-app:
+    build: ./application
+    image: web-app
+    container_name: web-app
+    command: python app.py runserver
+    volumes:
+       - ./application:/dwo
+    ports:
+       - "5050:5050"
+    depends_on:
+       - mongodb
+       - redis
+       - rq-worker
+    links:
+       - mongodb
+       - torpool
+    networks:
+       - app-tier
+
+  rq-worker:
+     build: ./application
+     container_name: rq-worker
+     command: bash -c "/wait && python app.py runworker"
+     networks:
+      - app-tier
+     volumes:
+      - ./application:/dwo
+     depends_on:
+      - redis
+     links:
+      - torpool
+      - redis
+      - mongodb
+     environment:
+      WAIT_HOSTS: redis:6379
+      WAIT_BEFORE_HOSTS: 5
+
+
+
+  mongoclient:
+    image: mongoclient/mongoclient
+    ports:
+      - 3000:3000
+    links:
+      - mongodb:mongo
+    networks:
+      - app-tier
