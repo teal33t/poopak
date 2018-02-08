@@ -1,5 +1,15 @@
 version: '3'
 
+
+# NGINX 
+# FLASK
+# MONGODB
+# REDIS
+# REDIS WORKER
+# TOR + HA PROXY
+# [-] MONGOCLIENT 
+
+
 networks:
   app-tier:
     driver: bridge
@@ -45,16 +55,31 @@ services:
       - app-tier
 
 
+  server:
+    restart: always
+    image: nginx
+    volumes:
+      - ./web-server/conf.d:/etc/nginx/conf.d
+      - ./application/web/static:/app/static
+    links:
+      - web-app:web-app
+    ports:
+      - "80:80"
+    networks:
+      - app-tier
+
   # application
   web-app:
+    restart: always
     build: ./application
     image: web-app
     container_name: web-app
-    command: python app.py
+#    command: python app.py
+    command: gunicorn app:app -b :8000 --name app --log-level=debug --log-file=-
     volumes:
-       - ./application:/dwo
-    ports:
-       - "5050:5050"
+       - ./application:/app
+    expose:
+       - "8000"
     depends_on:
        - mongodb
     links:
@@ -66,13 +91,14 @@ services:
        - app-tier
 
   rq-worker:
+     restart: always
      build: ./application
      container_name: rq-worker
      command: bash -c "/wait && python worker.py"
      networks:
       - app-tier
      volumes:
-      - ./application:/dwo
+      - ./application:/app
      depends_on:
       - redis
      links:

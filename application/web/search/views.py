@@ -106,13 +106,13 @@ def add_onion():
 
             try:
                 print (url)
-                job = q.enqueue(
+                job = q.enqueue_call(
                     func=run_crawler, args=(url,), timeout=500
                 )
                 print (job)
                 if job.get_id():
                     flash('New onion added to crawler queue.', 'success')
-                    return redirect(url_for("index"))
+                return redirect(url_for("index"))
 
             except Exception:
                 print (Exception)
