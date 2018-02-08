@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, flash
+from flask import Flask, redirect, url_for
 # from flask_login import LoginManagercurrent_user
 import flask_login
 from flask_wtf.csrf import CSRFProtect
@@ -70,6 +70,12 @@ from .dashboard import dashboardbp
 app.register_blueprint(dashboardbp, url_prefix='/dashboard')
 
 
+# @app.before_request
+# def before_request():
+#     # app.session.permanent = True
+#     app.permanent_session_lifetime = datetime.timedelta(minutes=20)
+#     # app.session.modified = True
+#     # app.g.user = flask_login.current_user
 
 @login_manager.user_loader
 def load_user(id):
@@ -80,6 +86,45 @@ def load_user(id):
 
 @login_manager.unauthorized_handler
 def unauthorized_callback():
-    flash("Please login")
     return redirect(url_for('auth.login'))
+
+#
+#
+# @login_manager.user_loader
+# def load_user(user_id):
+#     return User.get(user_id)
+
+
+
+
+
+# @app.route('/', methods=['GET', 'POST'])
+# def index():
+#     search_form = SearchForm(request.form)
+#     alive_onions = client.crawler.documents.find({"status": 200}).count()
+#     offline_checked_onions = client.crawler.documents.find({"status": 503}).count()
+#     last_crawled = client.crawler.documents.find().sort("seen_time", DESCENDING).limit(1)
+#     checked_onions = client.crawler.documents.count()
+#     if search_form.validate_on_submit():
+#         return redirect(url_for('.search', phrase=search_form.phrase.data.lower()))
+#     return render_template('index.html', form=search_form,
+#                            checked_onions=checked_onions,
+#                            alive_onions=alive_onions,
+#                            offline_onions=offline_checked_onions,
+#                            last_crawled=last_crawled[0]['seen_time'])
+
+
+# @app.route('/directory/<int:page_number>', methods=["GET"])
+# def directory(page_number=1):
+#     all_count = client.crawler.documents.count()
+#     pagination = Pagination(page_number, n_per_page, all_count)
+#     form = SearchForm()
+#     all = client.crawler.documents.find({}).skip((page_number - 1) * n_per_page).limit(n_per_page)
+#     return render_template('directory.html',
+#                            results=all,
+#                            search_form=form,
+#                            all_count=all_count,
+#                            pagination=pagination)
+
+
 

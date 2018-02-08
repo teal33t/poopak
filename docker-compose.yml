@@ -50,25 +50,25 @@ services:
     build: ./application
     image: web-app
     container_name: web-app
-    command: python app.py runserver
+    command: python app.py
     volumes:
        - ./application:/dwo
     ports:
        - "5050:5050"
     depends_on:
        - mongodb
-       - redis
-       - rq-worker
     links:
        - mongodb
        - torpool
+       - redis
+       - rq-worker
     networks:
        - app-tier
 
   rq-worker:
      build: ./application
      container_name: rq-worker
-     command: bash -c "/wait && python app.py runworker"
+     command: bash -c "/wait && python worker.py"
      networks:
       - app-tier
      volumes:

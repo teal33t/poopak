@@ -24,6 +24,7 @@ Flask-Script==2.0.6
 Flask-WTF==0.14.2
 gevent==1.2.2
 greenlet==0.4.13
+gunicorn==19.7.1
 hiredis==0.2.0
 httptools==0.0.10
 idna==2.6

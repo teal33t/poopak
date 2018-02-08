@@ -125,7 +125,7 @@ def add_onion():
         flash("Address is not valid, onion must be at least 16 chars, \
                 ie. http://xxxxxxxxxxxxxxxx.onion or xxxxxxxxxxxxxxxx.onion", 'danger')
         return redirect(url_for("search.add_onion"))
-        # print (form.errors)
+    print (add_form.errors)
 
     return render_template('new.html', add_form=add_form, search_form=search_form)
 
