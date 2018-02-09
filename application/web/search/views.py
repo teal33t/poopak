@@ -22,14 +22,14 @@ def index():
     search_form = SearchForm(request.form)
     if search_form.validate_on_submit():
         return redirect(url_for('.search', phrase=search_form.phrase.data.lower()))
-    try:
-        alive_onions = client.crawler.documents.find({"status": 200}).count()
-        offline_checked_onions = client.crawler.documents.find({"status": 503}).count()
-        last_crawled = client.crawler.documents.sort("seen_time", DESCENDING).limit(1)
-        checked_onions = client.crawler.documents.count()
-    except:
+    # try:
+    alive_onions = client.crawler.documents.find({"status": 200}).count()
+    offline_checked_onions = client.crawler.documents.find({"status": 503}).count()
+    last_crawled = client.crawler.documents.find().sort("seen_time", DESCENDING).limit(1)
+    checked_onions = client.crawler.documents.find().count()
+    # except:
 
-        return render_template('index.html', form=search_form)
+        # return render_template('index.html', form=search_form)
 
     return render_template('index.html', form=search_form,
                            checked_onions=checked_onions,
@@ -62,29 +62,35 @@ def search(phrase, page_number=1):
 def report(id):
     report_form = ReportOnionForm()
     search_form = SearchForm()
-    doc = client.crawler.documents.find_one({"_id": ObjectId(id)})
-    report_form.url = doc['url']
-    report_form.id = id
+
+    try:
+        doc = client.crawler.documents.find_one({"_id": ObjectId(id)})
+        report_form.url = doc['url']
+        report_form.id = id
+    except:
+        flash("Invalid page")
+        redirect(url_for('search.index'))
+
     if report_form.validate_on_submit():
         if captcha.validate():
-            try:
-                print (id)
-                print(report_form.body.data)
-                client.crawler.documents.update_one({'_id': ObjectId(id)},
-                                                    {'$set': {"report": report_form.body.data,
-                                                              "report_date": datetime.datetime.utcnow()}})
-                flash('Reported! your are helping community.' , 'success')
-                redirect(url_for("index"))
-            except:
-                flash("Error, please try later", 'danger')
-                redirect(url_for("search.report", id=id))
+            client.crawler.documents.update_one({'_id': ObjectId(id)},
+                                                {
+                                                    '$push': {
+                                                        'tags':
+                                                            {
+                                                                "report_body": report_form.body.data,
+                                                                "report_date": datetime.datetime.utcnow()
+                                                            }
+                                                    }})
+            flash('Reported! your are helping community.' , 'success')
+            redirect(url_for("index"))
         else:
             flash("Wrong captcha", 'danger')
 
-
     if doc['url']:
         return render_template('report.html', search_form=search_form, report_form=report_form)
-    # doc = client.crawler.documents.update_one({'_id': id}, {"$set": {"reported": 1,}})
+
+        # doc = client.crawler.documents.update_one({'_id': id}, {"$set": {"reported": 1,}})
 
 
 @searchbp.route('/new/', methods=['GET', 'POST'])
