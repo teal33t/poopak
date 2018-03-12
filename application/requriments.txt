@@ -27,6 +27,7 @@ greenlet==0.4.13
 gunicorn==19.7.1
 hiredis==0.2.0
 httptools==0.0.10
+huey==1.7.0
 idna==2.6
 itsdangerous==0.24
 Jinja2==2.10
@@ -39,6 +40,7 @@ pathtools==0.1.2
 pika==0.11.2
 Pillow==5.0.0
 prometheus-client==0.0.20
+pycurl==7.43.0.1
 pymongo==3.6.0
 python-dateutil==2.6.1
 pytz==2017.3
@@ -48,6 +50,9 @@ rq==0.10.0
 rq-scheduler==0.8.1
 sanic==0.7.0
 six==1.11.0
+stem==1.6.0
+structlog==18.1.0
+tasktiger==0.9.3
 ujson==1.35
 uvloop==0.9.1
 watchdog==0.8.3

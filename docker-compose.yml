@@ -38,6 +38,7 @@ services:
         - MONGODB_ROOT_PASSWORD=54nn4n
         - MONGODB_USERNAME=admin
         - MONGODB_PASSWORD=54nn4n
+        - MONGODB_DATABASE=crawler
     networks:
       - app-tier
 
@@ -50,8 +51,9 @@ services:
       - "2090:2090"
     environment:
       - tors=1
+#      - privoxy=1
     networks:
-      - default
+#      - default
       - app-tier
 
 
@@ -75,9 +77,11 @@ services:
     image: web-app
     container_name: web-app
 #    command: python app.py
-    command: gunicorn app:app -b :8000 --name app --log-level=debug --log-file=-
+    command: bash -c "/wait && gunicorn app:app -b :8000 --name app --log-level=debug --log-file=-"
     volumes:
        - ./application:/app
+#    ports:
+#      - "5050:5050"
     expose:
        - "8000"
     depends_on:
@@ -89,6 +93,9 @@ services:
        - rq-worker
     networks:
        - app-tier
+    environment:
+      WAIT_HOSTS: mongodb:27017
+      WAIT_BEFORE_HOSTS: 35
 
   rq-worker:
      restart: always

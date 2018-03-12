@@ -1,49 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>deepweb.observer</title>
-</head>
+{% extends "base.html" %}
+{% block body %}
 
-<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css')}}" >
-<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-theme.css')}}" >
-<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}" >
-
-<body>
-<nav class="navbar navbar-default" role="navigation">
-    <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="{{url_for('search.index')}}">deepweb.observer</a>
-    </div>
-
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Search</a></li>
-            <li><a href="#">Add Onion</a></li>
-            <li><a href="{{url_for('search.directory')}}">Directory</a></li>
-        </ul>
-        <div class="col-sm-3 col-md-3">
-              <form role="form" method="POST" action="{{url_for('search.index')}}" enctype="multipart/form-data">
-                <div class="input-group">
-                    {{ search_form.csrf_token }}
-                    {{ search_form.phrase(class_="form-control")}}
-                    <div class="input-group-btn">
-                        {{search_form.submit(class_="btn btn-default")}}
-                    </div>
-                </div>
-              </form>
-        </div>
-        <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Stats</a></li>
-            <li><a href="#">Contact</a></li>
-        </ul>
-    </div><!-- /.navbar-collapse -->
-</nav>
 <div class="container" style="margin-top: 5%;">
     <div class="col-md-12">
         <a class="btn btn-success" href="{{url_for('search.directory')}}">Alive onion pages [HTTP 200]</a>
@@ -111,5 +68,4 @@
     {% endif %}
 </div>
 
-</body>
-</html>
+{% endblock %}

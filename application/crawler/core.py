@@ -5,7 +5,7 @@ from urllib.parse import urljoin
 import motor.motor_asyncio
 from aiosocks.connector import ProxyConnector, ProxyClientRequest
 import itertools, datetime
-
+from .ucurl import query
 
 class BaseCrawler:
 
@@ -32,22 +32,29 @@ class BaseCrawler:
         if not self._urls_to_crawl.empty():
             url = await self._urls_to_crawl.get()
             if url not in self.crawled:
+                print ("before try")
                 self.crawled.append(url)
-                try:
-                    print ("TRY %s" %(str(url)))
-                    async with self.session.get(url, proxy=self.proxy, timeout=30) as response:
-                        print ("-> %s [%s]" % (response.url, response.status))
-                        html = await response.read()
-                        if response.url != url and response.url not in self.crawled:
-                            self.crawled.append(response.url)
-                        self._data_to_parse.put_nowait({'url': response.url, 'html': html, 'status': response.status})
-                        return None
-                except Exception as e:
-                    print("-> %s [%s]" % (url, 503))
-                    # self.logger.warning(e)
-                    print (e)
-                    print ("ERROR")
-                    await self.collection.insert_one({"url": url, "status": 503, "seen_time": datetime.datetime.utcnow()})
+                # try:
+                print ("TRY %s" %(str(url)))
+                # async with self.session.get(url, proxy=self.proxy, timeout=80) as response:
+                host = self.proxy[str(self.proxy).index(":"):]
+                port = self.proxy[:str(self.proxy).index(":")+1]
+                # print (port)
+                # print (host)
+                response = query(url, "torpool", 5566)
+                print (response)
+                print ("-> %s [%s]" % (response.url, response.status))
+                # html = await response.read()
+                if response.url != url and response.url not in self.crawled:
+                    self.crawled.append(response.url)
+                self._data_to_parse.put_nowait({'url': response.url, 'html': response.html, 'status': response.status})
+                    # return None
+                # except Exception as e:
+                #     print("-> %s [%s]" % (url, 503))
+                #     self.logger.warning(e)
+                    # print (e)
+                    # print ("ERROR")
+                    # await self.collection.insert_one({"url": url, "status": ERROR, "seen_time": datetime.datetime.utcnow()})
 
 
     async def link_parser(self, base_url):

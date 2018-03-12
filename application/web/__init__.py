@@ -9,7 +9,7 @@ from web.models import User
 
 from crawler import run as run_crawler
 from worker import conn
-from .config import redis_uri
+from .config import redis_uri, mongodb_uri
 
 import datetime
 import uuid
@@ -42,8 +42,8 @@ csrf = CSRFProtect()
 csrf.init_app(app)
 captcha = SessionCaptcha(app)
 
-client = MongoClient("mongodb://%s:%s@mongodb:27017/crawler" % ("admin", "54nn4n"))
 
+client = MongoClient(mongodb_uri)
 
 from werkzeug.security import generate_password_hash
 from pymongo.errors import DuplicateKeyError

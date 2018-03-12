@@ -24,13 +24,16 @@ def dashboard():
     status_count = oss.get_requests_stats_all()
     multiple_urls_form = MultipleOnion()
     print ("*"*1000)
+    last_200 = 0
+    last_all = 0
+
     try:
         last_200 = client.crawler.documents.find({"status": 200}).sort("seen_time", DESCENDING).limit(20)
         last_all = client.crawler.documents.find().sort("seen_time", DESCENDING).limit(20)
     except:
         print ("ERROR")
-        return render_template('dashboard.html', search_form=search_form,
-                               range_stats=range_stats_form, multiple_urls_form=multiple_urls_form)
+        # return render_template('dashboard.html', search_form=search_form,
+        #                        range_stats=range_stats_form, multiple_urls_form=multiple_urls_form)
 
     # print(list(last_200))
     # print(list(last_all))
@@ -49,8 +52,10 @@ def dashboard():
                                    time_series=time_series,multiple_urls_form=multiple_urls_form,
                                    last_200=last_200, last_all=last_all)
 
+    print ("DASHBOARD BEFORE FORM")
     if multiple_urls_form.validate_on_submit():
         seeds = []
+        print ("FORM")
         if multiple_urls_form.seed_file.data:
             filename = secure_filename(multiple_urls_form.seed_file.data.filename)
             path_to_save = seed_upload_dir + filename
@@ -60,14 +65,17 @@ def dashboard():
             _seed_file.close()
             for seed in seed_file:
                 seeds.append(seed.strip())
+
         if multiple_urls_form.urls.data:
             urls = extract_onions(multiple_urls_form.urls.data)
             for url in urls:
                 seeds.append(url.strip())
         try:
-            job = q.enqueue_call(
-                func=run_crawler, args=(seeds,), result_ttl=5000
+            print (seeds)
+            job = q.enqueue(
+                func=run_crawler, args=(seeds,), timeout=10
             )
+            print (job.result)
             if job:
                 flash('New onion added to crawler queue with task id %s' % (str(job.get_id())), 'success')
                 return render_template('dashboard.html', search_form=search_form,
@@ -75,7 +83,7 @@ def dashboard():
                                        multiple_urls_form=multiple_urls_form,
                                        last_200=last_200, last_all=last_all)
         except Exception:
-            print(Exception)
+            # print(Exception)
             print("ERROR")
 
     print (multiple_urls_form.errors)

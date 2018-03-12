@@ -30,6 +30,7 @@ dateutils = "*"
 dramatiq = "*"
 flask-script = "*"
 "flask-rq2" = "*"
+pycurl = "*"
 
 
 [dev-packages]

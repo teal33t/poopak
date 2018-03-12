@@ -22,20 +22,21 @@ def index():
     search_form = SearchForm(request.form)
     if search_form.validate_on_submit():
         return redirect(url_for('.search', phrase=search_form.phrase.data.lower()))
-    # try:
-    alive_onions = client.crawler.documents.find({"status": 200}).count()
-    offline_checked_onions = client.crawler.documents.find({"status": 503}).count()
-    last_crawled = client.crawler.documents.find().sort("seen_time", DESCENDING).limit(1)
-    checked_onions = client.crawler.documents.find().count()
-    # except:
+    try:
+        alive_onions = client.crawler.documents.find({"status": 200}).count()
+        offline_checked_onions = client.crawler.documents.find({"status": 503}).count()
+        last_crawled = client.crawler.documents.find().sort("seen_time", DESCENDING).limit(1)
+        checked_onions = client.crawler.documents.find().count()
+        return render_template('index.html', form=search_form,
+                               checked_onions=checked_onions,
+                               alive_onions=alive_onions,
+                               offline_onions=offline_checked_onions,
+                               last_crawled=last_crawled[0]['seen_time'])
 
-        # return render_template('index.html', form=search_form)
+    except:
 
-    return render_template('index.html', form=search_form,
-                           checked_onions=checked_onions,
-                           alive_onions=alive_onions,
-                           offline_onions=offline_checked_onions,
-                           last_crawled=last_crawled[0]['seen_time'])
+        return render_template('index.html', form=search_form)
+
 
 @searchbp.route('/search/<phrase>/', methods=["GET"])
 @searchbp.route('/search/<phrase>/<int:page_number>', methods=["GET"])
@@ -101,27 +102,30 @@ def add_onion():
     if add_form.validate_on_submit():
         if captcha.validate():
             url = add_form.url.data.strip()
-            try:
-                exist = client.crawler.documents.find({"url": url}).count()
-            except:
-                exist = 0
+            # try:
+            #     exist = client.crawler.documents.find({"url": url}).count()
+            # except:
+            #     exist = 0
+            #
+            # if exist:
+            #     flash('This onion is already indexed', 'warning')
+            #     return redirect(url_for("search.add_onion"))
 
-            if exist:
-                flash('This onion is already indexed', 'warning')
-                return redirect(url_for("search.add_onion"))
-
+            print ("SEARCH BEFORE TRY")
             try:
+
                 print (url)
                 job = q.enqueue_call(
-                    func=run_crawler, args=(url,), timeout=500
+                    func=run_crawler, args=(url,), ttl=500
                 )
                 print (job)
                 if job.get_id():
+                    print (vars(job))
                     flash('New onion added to crawler queue.', 'success')
-                return redirect(url_for("index"))
 
+                return redirect(url_for("index"))
             except Exception:
-                print (Exception)
+                # print (Exception)
                 print ("ERROR")
                 # exit(0)
         else:
@@ -131,7 +135,7 @@ def add_onion():
         flash("Address is not valid, onion must be at least 16 chars, \
                 ie. http://xxxxxxxxxxxxxxxx.onion or xxxxxxxxxxxxxxxx.onion", 'danger')
         return redirect(url_for("search.add_onion"))
-    print (add_form.errors)
+    # print (add_form.errors)
 
     return render_template('new.html', add_form=add_form, search_form=search_form)
 
@@ -178,3 +182,9 @@ def directory_all(page_number=1):
                            pagination=pagination,
                            search_form=search_form,
                            all_count=all_count, is_all=is_all)
+
+
+@searchbp.route('/faq')
+def faq():
+    search_form = SearchForm()
+    return render_template('faq.html', search_form = search_form)
