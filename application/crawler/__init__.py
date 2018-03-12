@@ -28,7 +28,7 @@ from lxml import html as lh
 #         response = query(url, "torpool", 5566)
 #         collection.insert_one(response)
 
-from .tor_scraper import start_tor, query
+from tor_scraper import start_tor, query
 def run(url):
     print (url)
     client = MongoClient(mongodb_uri)
