@@ -230,9 +230,15 @@ def run(url):
     # web_crawler.run(urls=url,group_len=100)
 
     # url = list(url)
-    result = query(url)
-    client.crawler.documents.insert_one(result)
-    # return True
+    if type(url) == list:
+        for item in url:
+            result = query(item)
+            client.crawler.documents.insert_one(result)
+    else:
+        result = query(url)
+        client.crawler.documents.insert_one(result)
+
+            # return True
 #
 #
 # # def hard_run(url):
