@@ -75,16 +75,17 @@ def dashboard():
                 seeds.append(url.strip())
         try:
             print (seeds)
-            job = q.enqueue_call(
-                func=run_crawler, args=(seeds,), ttl=500
-            )
-            print (job.result)
-            if job.get_id():
-                flash('New onion added to crawler queue with task id %s' % (str(job.get_id())), 'success')
-                return render_template('dashboard.html', search_form=search_form,
-                                       status_count=status_count, range_stats=range_stats_form,
-                                       multiple_urls_form=multiple_urls_form,
-                                       last_200=last_200, last_all=last_all)
+            for seed in seeds:
+                job = q.enqueue_call(
+                    func=run_crawler, args=(seed,), ttl=500
+                )
+                print (job.result)
+            # if job.get_id():
+            flash('New onion added to crawler queue with task id %s' % (str(job.get_id())), 'success')
+            return render_template('dashboard.html', search_form=search_form,
+                                   status_count=status_count, range_stats=range_stats_form,
+                                   multiple_urls_form=multiple_urls_form,
+                                   last_200=last_200, last_all=last_all)
         except Exception:
             # print(Exception)
             # print("ERROR")
