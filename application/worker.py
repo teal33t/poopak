@@ -8,10 +8,8 @@ from urllib.parse import urlparse
 local_dev = False
 
 if local_dev:
-    mongodb_uri = "mongodb://%s:%s@localhost:27017/crawler" % ("admin", "54nn4n")
     redis_uri = 'redis://localhost:6379'
 else:
-    mongodb_uri = "mongodb://%s:%s@mongodb:27017/crawler" % ("admin", "54nn4n")
     redis_uri = 'redis://redis:6379'
 
 
