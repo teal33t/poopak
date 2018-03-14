@@ -2,8 +2,8 @@
 {% block body %}
 
 <!--<script src="{{url_for('static', filename='js/d3.v3.min.js')}}"></script>-->
-<!--<script src="{{url_for('static', filename='js/jquery-3.3.1.min.js')}}"></script>-->
-<!--<script src="{{url_for('static', filename='js/jquery-ui.js')}}"></script>-->
+<script src="{{url_for('static', filename='js/jquery-3.3.1.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/jquery-ui.js')}}"></script>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery-ui.css')}}" >
 
 <script>
@@ -18,6 +18,25 @@
     });
 </script>
 
+
+<!--<div class="col-md-12">-->
+        <!--<h3>-->
+             <!--<i class="glyphicon glyphicon-dashboard"></i>-->
+            <!--&nbsp;Statistics-->
+        <!--</h3>-->
+
+        <!--<table class="table">-->
+
+            <!--<tr>-->
+                <!--<td>-->
+
+                <!--</td>-->
+            <!--</tr>-->
+
+        <!--</table>-->
+
+
+<!--</div>-->
 
 <div class="col-md-12">
     {% with messages = get_flashed_messages(with_categories=true) %}

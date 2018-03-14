@@ -1,8 +1,8 @@
 n_per_page = 20
 
-dev = False
+local_dev = False
 
-if dev:
+if local_dev:
 
     redis_uri = 'redis://localhost:6379'
     mongodb_uri = "mongodb://localhost:27017"

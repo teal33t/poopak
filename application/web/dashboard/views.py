@@ -23,7 +23,7 @@ def dashboard():
     range_stats_form = RangeStats()
     status_count = oss.get_requests_stats_all()
     multiple_urls_form = MultipleOnion()
-    print ("*"*1000)
+    # print ("*"*1000)
     last_200 = 0
     last_all = 0
 
@@ -32,6 +32,7 @@ def dashboard():
         last_all = client.crawler.documents.find().sort("seen_time", DESCENDING).limit(20)
     except:
         print ("ERROR")
+
         # return render_template('dashboard.html', search_form=search_form,
         #                        range_stats=range_stats_form, multiple_urls_form=multiple_urls_form)
 
@@ -66,17 +67,19 @@ def dashboard():
             for seed in seed_file:
                 seeds.append(seed.strip())
 
+        print (multiple_urls_form.urls.data)
+        # print ("*"*100)
         if multiple_urls_form.urls.data:
             urls = extract_onions(multiple_urls_form.urls.data)
             for url in urls:
                 seeds.append(url.strip())
         try:
             print (seeds)
-            job = q.enqueue(
-                func=run_crawler, args=(seeds,), timeout=10
+            job = q.enqueue_call(
+                func=run_crawler, args=(seeds,), ttl=500
             )
             print (job.result)
-            if job:
+            if job.get_id():
                 flash('New onion added to crawler queue with task id %s' % (str(job.get_id())), 'success')
                 return render_template('dashboard.html', search_form=search_form,
                                        status_count=status_count, range_stats=range_stats_form,
@@ -84,7 +87,8 @@ def dashboard():
                                        last_200=last_200, last_all=last_all)
         except Exception:
             # print(Exception)
-            print("ERROR")
+            # print("ERROR")
+            flash('Crawler service is down.','danger')
 
     print (multiple_urls_form.errors)
 

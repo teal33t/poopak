@@ -3,7 +3,7 @@ import os
 from rq import Worker, Queue, Connection
 from redis import Redis
 from urllib.parse import urlparse
-from cfg import redis_uri
+from worker_config import redis_uri
 
 listen = ['default']
 redis_url = os.getenv('REDISTOGO_URL', redis_uri)
