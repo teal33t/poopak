@@ -9,6 +9,8 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-theme.css')}}" >
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}" >
 
+<link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='images/favicon/favicon-32x32.png')}}">
+
 <body>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -109,9 +111,6 @@
 
     </div>
 
-    <div class="col-md-12" style="margin:0 auto; text-align: center;">
-        yolato[at]protonmail.com
-    </div>
 
 
 </div>

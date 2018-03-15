@@ -230,6 +230,7 @@ def run(url):
     # web_crawler.run(urls=url,group_len=100)
 
     # url = list(url)
+    print (type(url))
     if type(url) == list:
         for item in url:
             result = query(item)
