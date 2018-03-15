@@ -13,7 +13,7 @@ else:
     redis_uri = 'redis://redis:6379'
 
 
-listen = ['default']
+listen = ['high']
 redis_url = os.getenv('REDISTOGO_URL', redis_uri)
 
 url = urlparse(redis_url)
