@@ -25,7 +25,7 @@ app.secret_key = "sacredtea"
 
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['CAPTCHA_ENABLE'] = True
-app.config['CAPTCHA_LENGTH'] = 2
+app.config['CAPTCHA_LENGTH'] = 4
 
 
 login_manager = flask_login.LoginManager()
