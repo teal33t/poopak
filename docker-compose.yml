@@ -50,7 +50,7 @@ services:
       - "5566:5566"
       - "2090:2090"
     environment:
-      - tors=1
+      - tors=10
 #      - privoxy=1
     networks:
 #      - default

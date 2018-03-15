@@ -11,7 +11,7 @@ from web.helper import extract_onions
 from web.search.forms import SearchForm
 from web.stats import onion_stats as oss
 from werkzeug.utils import secure_filename
-
+from time import sleep
 from . import dashboardbp
 from .forms import *
 
@@ -76,9 +76,10 @@ def dashboard():
         try:
             print (seeds)
             for seed in seeds:
-                job = q.enqueue(
+                job = q.enqueue_call(
                     func=run_crawler, args=(seed,), ttl=500
                 )
+                sleep(0.1) #delay between jobs
                 print (job.result)
             # if job.get_id():
             flash('New onion added to crawler queue with task id %s' % (str(job.get_id())), 'success')
