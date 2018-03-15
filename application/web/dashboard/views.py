@@ -79,7 +79,7 @@ def dashboard():
                 job = q.enqueue_call(
                     func=run_crawler, args=(seed,), ttl=60
                 )
-                sleep(0.1) #delay between jobs
+                # sleep(0.1) #delay between jobs
                 print (job.result)
             # if job.get_id():
             flash('New onion added to crawler queue with task id %s' % (str(job.get_id())), 'success')
