@@ -1,4 +1,7 @@
 .idea
+.idea/
 *.pyc
 mongodb
+.DS_Store
+*.log
 mongodb/*
