@@ -240,9 +240,9 @@ def run(url):
     else:
         client.crawler.documents.insert_one(result)
 
-def hard_run(seed_path):
+# def hard_run(seed_path):
     # python hard_run seed_path
-    pass
+    # pass
             # return True
 #
 #

@@ -120,8 +120,8 @@
       <file leaf-file-name="__init__.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/application/crawler/__init__.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="311">
-              <caret line="237" column="12" lean-forward="true" selection-start-line="237" selection-start-column="12" selection-end-line="237" selection-end-column="12" />
+            <state relative-caret-position="316">
+              <caret line="239" column="9" lean-forward="true" selection-start-line="239" selection-start-column="9" selection-end-line="239" selection-end-column="9" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -478,13 +478,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$USER_HOME$/.virtualenvs/Dashboard-BCKvgoYg/lib/python3.6/site-packages/redis/client.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1069">
-          <caret line="2239" column="6" lean-forward="false" selection-start-line="2239" selection-start-column="6" selection-end-line="2239" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/application/web/populate_users.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
@@ -848,10 +841,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/.virtualenvs/Dashboard-BCKvgoYg/lib/python3.6/site-packages/pymongo/bulk.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="244">
+          <caret line="451" column="26" lean-forward="false" selection-start-line="451" selection-start-column="26" selection-end-line="451" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/application/crawler/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="311">
-          <caret line="237" column="12" lean-forward="true" selection-start-line="237" selection-start-column="12" selection-end-line="237" selection-end-column="12" />
+        <state relative-caret-position="316">
+          <caret line="239" column="9" lean-forward="true" selection-start-line="239" selection-start-column="9" selection-end-line="239" selection-end-column="9" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
