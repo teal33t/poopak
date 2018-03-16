@@ -69,14 +69,14 @@ def dashboard():
             for seed in seed_file:
                 seeds.append(seed.strip())
 
-        print (multiple_urls_form.urls.data)
+        # print (multiple_urls_form.urls.data)
         # print ("*"*100)
         if multiple_urls_form.urls.data:
             urls = extract_onions(multiple_urls_form.urls.data)
             for url in urls:
                 seeds.append(url.strip())
         try:
-            print (seeds)
+            # print (seeds)
             for seed in seeds:
                 job = q.enqueue_call(
                     func=run_crawler, args=(seed,), ttl=60, result_ttl=10
