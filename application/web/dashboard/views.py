@@ -75,24 +75,17 @@ def dashboard():
             urls = extract_onions(multiple_urls_form.urls.data)
             for url in urls:
                 seeds.append(url.strip())
-        try:
-            # print (seeds)
-            for seed in seeds:
-                job = q.enqueue_call(
-                    func=run_crawler, args=(seed,), ttl=60, result_ttl=10
-                )
+
+        for seed in seeds:
+            q.enqueue_call(func=run_crawler, args=(seed,), ttl=60, result_ttl=10)
                 # sleep(0.1) #delay between jobs
                 # print (job.result)
-            # if job.get_id():
-            flash('New onions added to crawler queue ' ,'success')
-            return render_template('dashboard.html', search_form=search_form,
-                                   status_count=status_count, range_stats=range_stats_form,
-                                   multiple_urls_form=multiple_urls_form,
-                                   last_200=last_200, last_all=last_all)
-        except Exception:
-            # print(Exception)
-            # print("ERROR")
-            flash('Crawler service is down.','danger')
+
+        flash('New onions added to crawler queue ' ,'success')
+        return render_template('dashboard.html', search_form=search_form,
+                               status_count=status_count, range_stats=range_stats_form,
+                               multiple_urls_form=multiple_urls_form,
+                               last_200=last_200, last_all=last_all)
 
     print (multiple_urls_form.errors)
 

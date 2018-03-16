@@ -239,6 +239,9 @@ def run(url):
     result = query(url)
     client.crawler.documents.insert_one(result)
 
+def hard_run(seed_path):
+    # python hard_run seed_path
+    pass
             # return True
 #
 #
