@@ -73,7 +73,7 @@ def query(url):
                 except:
                     resp = {"url": url, "html": html, "status": http_code, "seen_time": seen_time}
 
-                break
+                try_count = 99
             else:
                 print ('error httpcode:' +str(http_code))
                 resp = {"url": url, "status": http_code, "seen_time": seen_time}
