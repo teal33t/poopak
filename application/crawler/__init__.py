@@ -12,6 +12,13 @@ import datetime
 
 # import mongodb_client
 
+import datetime
+mongodb_uri =  "mongodb://%s:%s@mongodb:27017/crawler" % ("admin", "54nn4n")
+# # from web import huey
+# from .ucurl import query
+from pymongo import MongoClient
+from lxml import html as lh
+
 
 SOCKS_PORT = 7000
 CONTROL_PORT = 6969
@@ -178,12 +185,6 @@ def stop_process_on_name():
 # from .application.cfg import mongodb_uri
 # from application.cfg import mongodb_uri
 # # mongodb_uri = "mongodb://Samans-Air:27019/crawler"
-import datetime
-mongodb_uri =  "mongodb://%s:%s@mongodb:27017/crawler" % ("admin", "54nn4n")
-# # from web import huey
-# from .ucurl import query
-from pymongo import MongoClient
-from lxml import html as lh
 #
 #
 # @huey.task()
@@ -226,8 +227,17 @@ def run(url):
     #         result = query(item)
     #         client.crawler.documents.insert_one(result)
     # else:
+    exist = 0
+    try:
+        exist = client.crawler.documents.find({'url': url}).count()
+    except:
+        pass
+
     result = query(url)
-    client.crawler.documents.insert_one(result)
+    if exist > 0:
+        client.crawler.documents.update_one({'_id': url}, {"$set": result})
+    else:
+        client.crawler.documents.insert_one(result)
 
 def hard_run(seed_path):
     # python hard_run seed_path
