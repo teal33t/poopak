@@ -1,9 +1,11 @@
 from . import app
 
+from pytz import timezone
 
 @app.template_filter('datetimeformat')
 def datetimeformat(value, format='%d-%m-%Y - %H:%M:%S'):
     if value:
+        value = value.replace(tzinfo=timezone('UTC'))
         return value.strftime(format)
 
 @app.template_filter('limitbody')

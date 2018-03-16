@@ -2,7 +2,7 @@ import datetime
 import re
 
 from bson.objectid import ObjectId
-from flask import request, redirect, url_for, flash, render_template
+from flask import request, redirect, url_for, flash, render_templatem, render_template_string
 from pymongo import DESCENDING
 from web import captcha
 from web import client
@@ -15,6 +15,7 @@ from .forms import SearchForm, AddOnionForm, ReportOnionForm
 from web.paginate import Pagination
 from . import searchbp
 
+import time
 
 @searchbp.route('/', methods=['GET', 'POST'])
 def index():
@@ -188,3 +189,12 @@ def directory_all(page_number=1):
 def faq():
     search_form = SearchForm()
     return render_template('faq.html', search_form = search_form)
+
+@searchbp.route('/export_all')
+def export_csv():
+    all = client.crawler.documents.find({'status': 200}).sort("seen_time", DESCENDING)
+    result = "# 200 OK status list, %s" % (str(len(all)))
+    for item in all:
+        result = str("%s%s\n" % (result, item['url']))
+    return render_template_string(result)
+    # return render_template('faq.html', search_form = search_form)
