@@ -77,7 +77,8 @@ def dashboard():
                 seeds.append(url.strip())
 
         for seed in seeds:
-            q.enqueue_call(func=run_crawler, args=(seed,), ttl=60, result_ttl=10)
+            print (seed)
+            q.enqueue_call(func=run_crawler, args=(seed,), ttl=500, result_ttl=1)
                 # sleep(0.1) #delay between jobs
                 # print (job.result)
 
