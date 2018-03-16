@@ -51,7 +51,7 @@ def query(url):
             # print (200)
             http_code = query.getinfo(pycurl.HTTP_CODE)
             response = output.getvalue()
-            html = response.decode('iso-8859-1')
+            html = response.decode('utf8')
             # header_len = query.getinfo(pycurl.HEADER_SIZE)
             # header = resp[0: header_len]
             # html = resp[header_len:]

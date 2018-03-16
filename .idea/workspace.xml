@@ -49,7 +49,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="directory.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="directory.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/application/web/templates/directory.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="90">
@@ -88,7 +88,7 @@
       <file leaf-file-name="dashboard.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/application/web/templates/dashboard.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="398">
+            <state relative-caret-position="293">
               <caret line="177" column="0" lean-forward="false" selection-start-line="177" selection-start-column="0" selection-end-line="177" selection-end-column="0" />
               <folding>
                 <element signature="n#style#0;n#table#0;n#div#0;n#div#1;n#!!top" expanded="true" />
@@ -110,8 +110,8 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/application/web/search/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="429">
-              <caret line="195" column="37" lean-forward="false" selection-start-line="195" selection-start-column="37" selection-end-line="195" selection-end-column="37" />
+            <state relative-caret-position="798">
+              <caret line="198" column="50" lean-forward="true" selection-start-line="198" selection-start-column="50" selection-end-line="198" selection-end-column="50" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -131,11 +131,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="__init__.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="__init__.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/application/crawler/__init__.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="354">
-              <caret line="75" column="30" lean-forward="false" selection-start-line="75" selection-start-column="30" selection-end-line="75" selection-end-column="30" />
+            <state relative-caret-position="164">
+              <caret line="39" column="44" lean-forward="true" selection-start-line="39" selection-start-column="44" selection-end-line="39" selection-end-column="44" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -250,13 +250,13 @@
         <option value="$PROJECT_DIR$/application/crawler/simulator.py" />
         <option value="$PROJECT_DIR$/application/web/dashboard/views.py" />
         <option value="$PROJECT_DIR$/application/app.py" />
-        <option value="$PROJECT_DIR$/application/crawler/__init__.py" />
         <option value="$PROJECT_DIR$/application/web/filters.py" />
         <option value="$PROJECT_DIR$/application/web/__init__.py" />
         <option value="$PROJECT_DIR$/application/web/templates/dashboard.html" />
         <option value="$PROJECT_DIR$/application/web/templates/faq.html" />
         <option value="$PROJECT_DIR$/application/web/search/views.py" />
         <option value="$PROJECT_DIR$/application/web/templates/directory.html" />
+        <option value="$PROJECT_DIR$/application/crawler/__init__.py" />
       </list>
     </option>
   </component>
@@ -782,16 +782,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/application/crawler/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="354">
-          <caret line="75" column="30" lean-forward="false" selection-start-line="75" selection-start-column="30" selection-end-line="75" selection-end-column="30" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/application/web/templates/result.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
@@ -842,9 +832,21 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/application/web/templates/directory.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="98" lean-forward="false" selection-start-line="6" selection-start-column="98" selection-end-line="6" selection-end-column="98" />
+          <folding>
+            <element signature="e#310#316#0" expanded="true" />
+            <element signature="e#319#325#0" expanded="true" />
+            <element signature="n#style#0;n#a#1;n#li#0;n#ul#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/application/web/templates/dashboard.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="398">
+        <state relative-caret-position="293">
           <caret line="177" column="0" lean-forward="false" selection-start-line="177" selection-start-column="0" selection-end-line="177" selection-end-column="0" />
           <folding>
             <element signature="n#style#0;n#table#0;n#div#0;n#div#1;n#!!top" expanded="true" />
@@ -854,22 +856,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/application/web/search/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="429">
-          <caret line="195" column="37" lean-forward="false" selection-start-line="195" selection-start-column="37" selection-end-line="195" selection-end-column="37" />
+        <state relative-caret-position="798">
+          <caret line="198" column="50" lean-forward="true" selection-start-line="198" selection-start-column="50" selection-end-line="198" selection-end-column="50" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/application/web/templates/directory.html">
+    <entry file="file://$PROJECT_DIR$/application/crawler/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="98" lean-forward="false" selection-start-line="6" selection-start-column="98" selection-end-line="6" selection-end-column="98" />
+        <state relative-caret-position="164">
+          <caret line="39" column="44" lean-forward="true" selection-start-line="39" selection-start-column="44" selection-end-line="39" selection-end-column="44" />
           <folding>
-            <element signature="e#310#316#0" expanded="true" />
-            <element signature="e#319#325#0" expanded="true" />
-            <element signature="n#style#0;n#a#1;n#li#0;n#ul#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>
