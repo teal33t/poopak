@@ -27,80 +27,70 @@ from lxml import html as lh
 """Uses pycurl to fetch a site using the proxy on the SOCKS_PORT"""
 def query(url):
 
-  output = io.BytesIO()
+    output = io.BytesIO()
+    seen_time = datetime.datetime.utcnow()
 
-
-  through = False
-  tor_c = 0
-  seen_time = datetime.datetime.utcnow()
-  # print ("TEST")
-  # while not through:
-  try:
-
-    query = pycurl.Curl()
-    query.setopt(pycurl.URL, url)
-    query.setopt(pycurl.CONNECTTIMEOUT, 15)
-    query.setopt(pycurl.TIMEOUT, 25)
-    query.setopt(pycurl.FOLLOWLOCATION, 1)
-    query.setopt(pycurl.HTTPHEADER, getHeaders())
-    query.setopt(pycurl.PROXY, 'torpool')
-    query.setopt(pycurl.PROXYPORT, 5566)
-    # query.setopt(pycurl.PROXYTYPE, pycurl.PROXYTYPE_HTTP)
-
-    query.setopt(pycurl.PROXYTYPE, pycurl.PROXYTYPE_SOCKS5_HOSTNAME)
-    query.setopt(pycurl.WRITEFUNCTION, output.write)
-    query.perform()
-    # http_code = query.getinfo(pycurl.HTTP_CODE)
-    # print (200)
-    http_code = query.getinfo(pycurl.HTTP_CODE)
-    response = output.getvalue()
-    html = response.decode('iso-8859-1')
-    # header_len = query.getinfo(pycurl.HEADER_SIZE)
-    # header = resp[0: header_len]
-    # html = resp[header_len:]
-    if http_code == 200:
-        # through = True
+    try_count = 0
+    resp = None
+    while try_count < 4 :
         try:
-            dom = lh.fromstring(html)
-            title = dom.cssselect('title')
+            query = pycurl.Curl()
+            query.setopt(pycurl.URL, url)
+            query.setopt(pycurl.CONNECTTIMEOUT, 15)
+            query.setopt(pycurl.TIMEOUT, 25)
+            query.setopt(pycurl.FOLLOWLOCATION, 1)
+            query.setopt(pycurl.HTTPHEADER, getHeaders())
+            query.setopt(pycurl.PROXY, 'torpool')
+            query.setopt(pycurl.PROXYPORT, 5566)
+            # query.setopt(pycurl.PROXYTYPE, pycurl.PROXYTYPE_HTTP)
 
-            if title:
-                title = title[0].text_content()
-                # result['title'] = title
+            query.setopt(pycurl.PROXYTYPE, pycurl.PROXYTYPE_SOCKS5_HOSTNAME)
+            query.setopt(pycurl.WRITEFUNCTION, output.write)
+            query.perform()
+            # http_code = query.getinfo(pycurl.HTTP_CODE)
+            # print (200)
+            http_code = query.getinfo(pycurl.HTTP_CODE)
+            response = output.getvalue()
+            html = response.decode('iso-8859-1')
+            # header_len = query.getinfo(pycurl.HEADER_SIZE)
+            # header = resp[0: header_len]
+            # html = resp[header_len:]
+            if http_code == 200:
+                # through = True
+                try:
+                    dom = lh.fromstring(html)
+                    title = dom.cssselect('title')
 
-            body = dom.body.text_content()
-            resp = {"url": url, "html": html, 'body': body,
-                     "title": title,"status": http_code,
-                    "seen_time": seen_time}
+                    if title:
+                        title = title[0].text_content()
+                        # result['title'] = title
 
-        except:
-            resp = {"url": url, "html": html, "status": http_code, "seen_time": seen_time}
-        return resp
+                    body = dom.body.text_content()
+                    resp = {"url": url, "html": html, 'body': body,
+                            "title": title,"status": http_code,
+                            "seen_time": seen_time}
 
-    else:
-        # renew tor to retry
-        print ('error httpcode:' +str(http_code))
-        # renew_tor()
-        # tor_c = tor_c + 1
-        # if tor_c > 2:
-        #   through=True
-        resp = {"url": url, "status": http_code, "seen_time": seen_time}
-          # time.sleep(3)
-        return resp
+                except:
+                    resp = {"url": url, "html": html, "status": http_code, "seen_time": seen_time}
+
+                break
+            else:
+                print ('error httpcode:' +str(http_code))
+                resp = {"url": url, "status": http_code, "seen_time": seen_time}
+                try_count = try_count + 1
 
 
-  # except pycurl.error as exc:
-  except pycurl.error as e:
-    print (e)
-    # print ("pycurl error in tor_scraper.py %s" % exc)
-    # pass
-    resp = {"url": url, "status": 503, "seen_time": seen_time}
+                # except pycurl.error as exc:
+        except pycurl.error as e:
+            print (e)
+            try_count = try_count + 1
+            resp = {"url": url, "status": 503, "seen_time": seen_time}
+
     return resp
-    # return "Unable to reach %s (%s)" % (url, exc)
 
 
 
-  # return output.getvalue()
+        # return output.getvalue()
 
 
 """print tor bootstrap info"""
