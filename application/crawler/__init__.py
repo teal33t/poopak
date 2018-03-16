@@ -90,8 +90,8 @@ def query(url):
 
 
   # except pycurl.error as exc:
-  except:
-    # print (url)
+  except pycurl.error as e:
+    print (e)
     # print ("pycurl error in tor_scraper.py %s" % exc)
     # pass
     resp = {"url": url, "status": 503, "seen_time": seen_time}
