@@ -50,7 +50,7 @@ services:
       - "5566:5566"
       - "2090:2090"
     environment:
-      - tors=10
+      - tors=50
 #      - privoxy=1
     networks:
 #      - default
@@ -95,7 +95,7 @@ services:
        - app-tier
     environment:
       WAIT_HOSTS: mongodb:27017
-      WAIT_BEFORE_HOSTS: 35
+      WAIT_BEFORE_HOSTS: 25
 
   rq-worker:
      restart: always

@@ -116,7 +116,7 @@ def add_onion():
 
                 print (url)
                 job = q.enqueue_call(
-                    func=run_crawler, args=(url,), ttl=60
+                    func=run_crawler, args=(url,), ttl=60, result_ttl=10
                 )
                 print (job)
                 if job.get_id():
