@@ -229,12 +229,13 @@ def run(url):
     # else:
     exist = 0
     try:
-        exist = client.crawler.documents.find({'url': url}).count()
+        exist = client.crawler.documents.find_one({'url': url}).count()
     except:
         pass
 
     result = query(url)
-    if exist > 0:
+    print (exist)
+    if exist[0] == 0:
         client.crawler.documents.update_one({'_id': url}, {"$set": result})
     else:
         client.crawler.documents.insert_one(result)

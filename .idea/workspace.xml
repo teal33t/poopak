@@ -110,8 +110,8 @@
       <file leaf-file-name="__init__.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/application/crawler/__init__.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="411">
-              <caret line="237" column="43" lean-forward="false" selection-start-line="237" selection-start-column="33" selection-end-line="237" selection-end-column="43" />
+            <state relative-caret-position="302">
+              <caret line="237" column="14" lean-forward="false" selection-start-line="237" selection-start-column="14" selection-end-line="237" selection-end-column="14" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -797,7 +797,7 @@
         <state relative-caret-position="282">
           <caret line="86" column="43" lean-forward="false" selection-start-line="86" selection-start-column="38" selection-end-line="86" selection-end-column="43" />
           <folding>
-            <element signature="e#0#22#0" expanded="true" />
+            <element signature="e#0#22#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -807,7 +807,7 @@
         <state relative-caret-position="194">
           <caret line="21" column="50" lean-forward="false" selection-start-line="21" selection-start-column="45" selection-end-line="21" selection-end-column="50" />
           <folding>
-            <element signature="e#0#15#0" expanded="true" />
+            <element signature="e#0#15#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -842,8 +842,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/application/crawler/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="411">
-          <caret line="237" column="43" lean-forward="false" selection-start-line="237" selection-start-column="33" selection-end-line="237" selection-end-column="43" />
+        <state relative-caret-position="302">
+          <caret line="237" column="14" lean-forward="false" selection-start-line="237" selection-start-column="14" selection-end-line="237" selection-end-column="14" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
