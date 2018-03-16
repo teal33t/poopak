@@ -11,8 +11,8 @@ from crawler import run as run_crawler
 from worker import conn
 from .config import redis_uri, mongodb_uri
 
-import datetime
-import uuid
+# import datetime
+# import uuid
 
 app = Flask(__name__)
 
@@ -36,7 +36,7 @@ login_manager.login_view = 'auth.login'
 login_manager.login_message=""
 
 
-q = Queue(job_class="high",connection=conn)
+q = Queue(name="high",connection=conn)
 
 csrf = CSRFProtect()
 csrf.init_app(app)
@@ -97,6 +97,8 @@ def unauthorized_callback():
 
 
 from .errors import *
+
+
 
 
 # @app.route('/', methods=['GET', 'POST'])
