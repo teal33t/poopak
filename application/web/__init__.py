@@ -36,7 +36,7 @@ login_manager.login_view = 'auth.login'
 login_manager.login_message=""
 
 
-q = Queue(name="high",connection=conn)
+q = Queue(job_class="high",connection=conn)
 
 csrf = CSRFProtect()
 csrf.init_app(app)

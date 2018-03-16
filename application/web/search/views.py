@@ -64,7 +64,7 @@ def search(phrase, page_number=1):
 def report(id):
     report_form = ReportOnionForm()
     search_form = SearchForm()
-
+    doc = None
     try:
         doc = client.crawler.documents.find_one({"_id": ObjectId(id)})
         report_form.url = doc['url']
@@ -85,7 +85,7 @@ def report(id):
                                                             }
                                                     }})
             flash('Reported! your are helping community.' , 'success')
-            redirect(url_for("index"))
+            redirect(url_for("search.index"))
         else:
             flash("Wrong captcha", 'danger')
 
