@@ -227,19 +227,20 @@ def run(url):
     #         result = query(item)
     #         client.crawler.documents.insert_one(result)
     # else:
-    exist = 0
+    # exist = 99
     try:
+        # exist = 0
         exist = client.crawler.documents.find_one({'url': url}).count()
+        result = query(url)
+        print (exist)
+        if exist > 0:
+            print ("NOT EXIST -> UPDATE")
+            client.crawler.documents.update_one({'url': url}, {"$set": result}, upsert=False)
+        else:
+            client.crawler.documents.insert_one(result)
     except:
         pass
 
-    result = query(url)
-    print (exist)
-    if exist[0] > 0:
-        print ("NOT EXIST -> UPDATE")
-        client.crawler.documents.update_one({'url': url}, {"$set": result}, upsert=False)
-    else:
-        client.crawler.documents.insert_one(result)
 
 # def hard_run(seed_path):
     # python hard_run seed_path
