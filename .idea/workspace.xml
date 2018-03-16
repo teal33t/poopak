@@ -49,11 +49,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="directory.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="directory.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/application/web/templates/directory.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="95">
-              <caret line="7" column="94" lean-forward="false" selection-start-line="7" selection-start-column="94" selection-end-line="7" selection-end-column="94" />
+            <state relative-caret-position="105">
+              <caret line="7" column="66" lean-forward="false" selection-start-line="7" selection-start-column="66" selection-end-line="7" selection-end-column="66" />
               <folding>
                 <element signature="n#style#0;n#a#1;n#li#0;n#ul#0;n#div#0;n#div#0;n#!!top" expanded="true" />
               </folding>
@@ -105,12 +105,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/application/web/search/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="4" column="68" lean-forward="true" selection-start-line="4" selection-start-column="68" selection-end-line="4" selection-end-column="68" />
-              <folding />
+            <state relative-caret-position="339">
+              <caret line="188" column="10" lean-forward="true" selection-start-line="188" selection-start-column="10" selection-end-line="188" selection-end-column="10" />
+              <folding>
+                <element signature="e#0#15#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -250,9 +252,9 @@
         <option value="$PROJECT_DIR$/application/web/filters.py" />
         <option value="$PROJECT_DIR$/application/web/__init__.py" />
         <option value="$PROJECT_DIR$/application/web/templates/dashboard.html" />
-        <option value="$PROJECT_DIR$/application/web/templates/directory.html" />
         <option value="$PROJECT_DIR$/application/web/templates/faq.html" />
         <option value="$PROJECT_DIR$/application/web/search/views.py" />
+        <option value="$PROJECT_DIR$/application/web/templates/directory.html" />
       </list>
     </option>
   </component>
@@ -832,16 +834,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/application/web/templates/directory.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="95">
-          <caret line="7" column="94" lean-forward="false" selection-start-line="7" selection-start-column="94" selection-end-line="7" selection-end-column="94" />
-          <folding>
-            <element signature="n#style#0;n#a#1;n#li#0;n#ul#0;n#div#0;n#div#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/application/web/templates/faq.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
@@ -860,9 +852,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/application/web/search/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="68" lean-forward="true" selection-start-line="4" selection-start-column="68" selection-end-line="4" selection-end-column="68" />
-          <folding />
+        <state relative-caret-position="339">
+          <caret line="188" column="10" lean-forward="true" selection-start-line="188" selection-start-column="10" selection-end-line="188" selection-end-column="10" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/web/templates/directory.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="66" lean-forward="false" selection-start-line="7" selection-start-column="66" selection-end-line="7" selection-end-column="66" />
+          <folding>
+            <element signature="n#style#0;n#a#1;n#li#0;n#ul#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
