@@ -2,7 +2,7 @@ import datetime
 import re
 
 from bson.objectid import ObjectId
-from flask import request, redirect, url_for, flash, render_template, render_template_string
+from flask import request, redirect, url_for, flash, render_template, Response
 from pymongo import DESCENDING
 from web import captcha
 from web import client
@@ -193,8 +193,9 @@ def faq():
 @searchbp.route('/export_all')
 def export_csv():
     all = client.crawler.documents.find({'status': 200}).sort("seen_time", DESCENDING)
-    result = "# 200 OK status list"
+    result = "# 200 OK status list\n "
     for item in all:
         result = str("%s%s\n" % (result, item['url']))
-    return render_template_string(result)
+    return Response(result, mimetype='text/plain')
+    # return render_template_string(result)
     # return render_template('faq.html', search_form = search_form)

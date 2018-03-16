@@ -52,9 +52,11 @@
       <file leaf-file-name="directory.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/application/web/templates/directory.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="7" column="66" lean-forward="false" selection-start-line="7" selection-start-column="66" selection-end-line="7" selection-end-column="66" />
+            <state relative-caret-position="90">
+              <caret line="6" column="98" lean-forward="false" selection-start-line="6" selection-start-column="98" selection-end-line="6" selection-end-column="98" />
               <folding>
+                <element signature="e#310#316#0" expanded="true" />
+                <element signature="e#319#325#0" expanded="true" />
                 <element signature="n#style#0;n#a#1;n#li#0;n#ul#0;n#div#0;n#div#0;n#!!top" expanded="true" />
               </folding>
             </state>
@@ -108,8 +110,8 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/application/web/search/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="339">
-              <caret line="188" column="10" lean-forward="true" selection-start-line="188" selection-start-column="10" selection-end-line="188" selection-end-column="10" />
+            <state relative-caret-position="429">
+              <caret line="195" column="37" lean-forward="false" selection-start-line="195" selection-start-column="37" selection-end-line="195" selection-end-column="37" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -180,9 +182,9 @@
       <find>search</find>
       <find>start_time = time.time()</find>
       <find>pytz</find>
-      <find>EXIF</find>
       <find>find(</find>
       <find>result</find>
+      <find>EXIF</find>
     </findStrings>
     <replaceStrings>
       <replace>@searchbp.</replace>
@@ -824,16 +826,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/application/web/templates/dashboard.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="398">
-          <caret line="177" column="0" lean-forward="false" selection-start-line="177" selection-start-column="0" selection-end-line="177" selection-end-column="0" />
-          <folding>
-            <element signature="n#style#0;n#table#0;n#div#0;n#div#1;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/application/web/templates/faq.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
@@ -850,10 +842,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/application/web/templates/dashboard.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="398">
+          <caret line="177" column="0" lean-forward="false" selection-start-line="177" selection-start-column="0" selection-end-line="177" selection-end-column="0" />
+          <folding>
+            <element signature="n#style#0;n#table#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/application/web/search/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="339">
-          <caret line="188" column="10" lean-forward="true" selection-start-line="188" selection-start-column="10" selection-end-line="188" selection-end-column="10" />
+        <state relative-caret-position="429">
+          <caret line="195" column="37" lean-forward="false" selection-start-line="195" selection-start-column="37" selection-end-line="195" selection-end-column="37" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
@@ -862,9 +864,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/application/web/templates/directory.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="66" lean-forward="false" selection-start-line="7" selection-start-column="66" selection-end-line="7" selection-end-column="66" />
+        <state relative-caret-position="90">
+          <caret line="6" column="98" lean-forward="false" selection-start-line="6" selection-start-column="98" selection-end-line="6" selection-end-column="98" />
           <folding>
+            <element signature="e#310#316#0" expanded="true" />
+            <element signature="e#319#325#0" expanded="true" />
             <element signature="n#style#0;n#a#1;n#li#0;n#ul#0;n#div#0;n#div#0;n#!!top" expanded="true" />
           </folding>
         </state>
