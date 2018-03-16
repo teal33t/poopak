@@ -61,9 +61,11 @@ def dashboard():
             filename = secure_filename(multiple_urls_form.seed_file.data.filename)
             path_to_save = seed_upload_dir + filename
             multiple_urls_form.seed_file.data.save(path_to_save)
+
             _seed_file = open(path_to_save,'r')
             seed_file = extract_onions(_seed_file.read())
             _seed_file.close()
+
             for seed in seed_file:
                 seeds.append(seed.strip())
 
