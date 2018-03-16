@@ -2,7 +2,7 @@ import datetime
 import re
 
 from bson.objectid import ObjectId
-from flask import request, redirect, url_for, flash, render_templatem, render_template_string
+from flask import request, redirect, url_for, flash, render_template, render_template_string
 from pymongo import DESCENDING
 from web import captcha
 from web import client
