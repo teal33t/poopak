@@ -235,7 +235,8 @@ def run(url):
 
     result = query(url)
     print (exist)
-    if exist != 0:
+    if exist > 0:
+        print ("NOT EXIST -> UPDATE")
         client.crawler.documents.update_one({'url': url}, {"$set": result}, upsert=False)
     else:
         client.crawler.documents.insert_one(result)
