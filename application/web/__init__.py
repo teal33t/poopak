@@ -48,8 +48,8 @@ client = MongoClient(mongodb_uri)
 from werkzeug.security import generate_password_hash
 from pymongo.errors import DuplicateKeyError
 
-pass_hash = generate_password_hash("admin", method='pbkdf2:sha256')
-
+pass_hash = generate_password_hash("123qweasdzxc", method='pbkdf2:sha256')
+print (pass_hash)
 # Insert the user in the DB
 try:
     client.crawler.users.insert({"_id": "admin", "password": pass_hash})

@@ -192,7 +192,7 @@ def faq():
 
 @searchbp.route('/export_all')
 def export_csv():
-    all = client.crawler.documents.find({'status': 200}).sort("seen_time", DESCENDING)
+    all = client.crawler.documents.find({'status': 200})
     result = "# 200 OK status list\n "
     for item in all:
         result = str("%s%s\n" % (result, item['url']))
