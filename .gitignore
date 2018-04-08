@@ -4,10 +4,6 @@
 mongodb
 .DS_Store
 *.log
-mongodb/*
-<<<<<<< HEAD
-*.rdb
-=======
 *.rdp
-__pycach__
->>>>>>> master
+__pycache__
+
