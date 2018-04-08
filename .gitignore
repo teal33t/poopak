@@ -5,3 +5,5 @@ mongodb
 .DS_Store
 *.log
 mongodb/*
+*.rdp
+__pycach__
