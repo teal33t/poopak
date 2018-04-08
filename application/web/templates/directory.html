@@ -26,7 +26,7 @@
                 <span class="badge badge-primary">{{item.seen_time | datetimeformat}}</span>
                 <span style="display: inline-block;" class="badge">{{item.status}}</span>
                 {% if item.body %}
-                <p>
+                <p style="word-wrap: break-word;">
                     {{item.body | limitbody(256)}}
                 </p>
                 {% endif %}

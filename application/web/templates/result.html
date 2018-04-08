@@ -21,7 +21,7 @@
                 <cite style="display: inline-block;" class="badge badge-info">{{item.status}}</cite>
                 <cite style="display: inline-block;" class="badge badge-success">{{item.seen_time | datetimeformat}}</cite>
                 <a style="display: inline-block;" class="btn badge badge-danger" href="{{url_for('search.report', id=item._id) }}" >report</a>
-                <p>
+                <p style="word-wrap: break-word;">
                     {{item.body | limitbody}}
                 </p>
                 <hr>

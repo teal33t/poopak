@@ -5,7 +5,7 @@ COPY . /app
 ENV HOME=/app
 WORKDIR /app
 
-RUN pip install -r requriments.txt
+RUN pip install -r requirements.txt
 
 ADD docker_wait /wait
 RUN chmod +x /wait

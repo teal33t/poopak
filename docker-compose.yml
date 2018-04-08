@@ -50,7 +50,7 @@ services:
       - "5566:5566"
       - "2090:2090"
     environment:
-      - tors=50
+      - tors=1
 #      - privoxy=1
     networks:
 #      - default
@@ -69,6 +69,17 @@ services:
       - "80:80"
     networks:
       - app-tier
+
+#  wascan:
+##    restart: always
+#    build: ./wascan
+#    image: wascan
+#    container_name: wascan
+##    command: python wascan.py
+#    volumes:
+#      - ./wascan:/wascan
+#    networks:
+#      - app-tier
 
   # application
   web-app:

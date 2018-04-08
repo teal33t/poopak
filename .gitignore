@@ -5,3 +5,4 @@ mongodb
 .DS_Store
 *.log
 mongodb/*
+*.rdb

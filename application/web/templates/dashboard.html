@@ -19,25 +19,6 @@
 </script>
 
 
-<!--<div class="col-md-12">-->
-        <!--<h3>-->
-             <!--<i class="glyphicon glyphicon-dashboard"></i>-->
-            <!--&nbsp;Statistics-->
-        <!--</h3>-->
-
-        <!--<table class="table">-->
-
-            <!--<tr>-->
-                <!--<td>-->
-
-                <!--</td>-->
-            <!--</tr>-->
-
-        <!--</table>-->
-
-
-<!--</div>-->
-
 <div class="col-md-12">
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -229,7 +210,7 @@
                     <td width="15%">
                         <i class="glyphicon glyphicon-check text-success"></i>&nbsp;
                         {{item.seen_time | datetimeformat}}</td>
-                    <td width="25%"><a href="{{item.url}}" target="_blank">{{item.url}}</a></td>
+                    <td width="25%"><a href="http://{{item.url}}" target="_blank">{{item.url}}</a></td>
                     <td width="40%">{{item.title}}</td>
                 </tr>
             {% endfor %}

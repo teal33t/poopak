@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>deepweb.observer</title>
+    <title>Poopak</title>
 </head>
 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css')}}" >
 <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-theme.css')}}" >
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}" >
 
-<link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='images/favicon/favicon-32x32.png')}}">
+<link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='images/favicon-32x32.png')}}">
 
 <body>
 
@@ -38,7 +38,7 @@
                 <h1 class="text-center">
                     <img src="{{ url_for('static', filename='images/poopak_logo.jpg')}}">
                     <br/>
-                    deepweb.observer</h1>
+                    Poopak</h1>
                 <h4 class="text-center">Hidden service link directory</h4>
                 <br />
                 {{ form.csrf_token }}
@@ -87,7 +87,7 @@
                     {% endif %}
                     {% if offline_onions %}
                     <tr>
-                        <td>Offline onions pages(503)</td>
+                        <td>Offline onions pages</td>
                         <td class="text-center"><strong>{{offline_onions}}</strong></td>
                     </tr>
                     {% endif %}
