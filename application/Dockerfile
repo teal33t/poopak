@@ -1,5 +1,4 @@
 FROM python:3.6.1
-MAINTAINER Y0LAT0 "yolato@protonmail.com"
 
 COPY . /app
 ENV HOME=/app

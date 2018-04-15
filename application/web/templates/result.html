@@ -7,6 +7,7 @@
 
         Total found {{all_count}}
       </h5>
+        <br/>
         {%if results %}
         <hr />
         <ul class="list-unstyled">
@@ -16,7 +17,7 @@
                     <span class="highlight">{{item.title}}</span>
                 </a>
 
-                <span class="badge">{{item.last_seen }}</span>
+                <span class="badge">{{item.last_seen | datetimeformat}}</span>
                 <cite style="display: block;" class="text-success">{{item.url}}</cite>
                 <cite style="display: inline-block;" class="badge badge-info">{{item.status}}</cite>
                 <cite style="display: inline-block;" class="badge badge-success">{{item.seen_time | datetimeformat}}</cite>

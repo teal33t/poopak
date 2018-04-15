@@ -35,9 +35,9 @@ services:
     ports:
       - "27017:27017"
     environment:
-        - MONGODB_ROOT_PASSWORD=54nn4n
+        - MONGODB_ROOT_PASSWORD=123qwe
         - MONGODB_USERNAME=admin
-        - MONGODB_PASSWORD=54nn4n
+        - MONGODB_PASSWORD=123qwe
         - MONGODB_DATABASE=crawler
     networks:
       - app-tier
@@ -50,7 +50,7 @@ services:
       - "5566:5566"
       - "2090:2090"
     environment:
-      - tors=1
+      - tors=5
 #      - privoxy=1
     networks:
 #      - default
@@ -69,17 +69,6 @@ services:
       - "80:80"
     networks:
       - app-tier
-
-#  wascan:
-##    restart: always
-#    build: ./wascan
-#    image: wascan
-#    container_name: wascan
-##    command: python wascan.py
-#    volumes:
-#      - ./wascan:/wascan
-#    networks:
-#      - app-tier
 
   # application
   web-app:

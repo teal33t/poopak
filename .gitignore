@@ -1,6 +1,7 @@
+.bash_history
 .idea
-.idea/
 *.pyc
+Pipefile.lock
 mongodb
 .DS_Store
 *.log
