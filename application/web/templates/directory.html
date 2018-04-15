@@ -22,7 +22,7 @@
 
                 <br/>
                 {% endif %}
-                <a target="_blank" href="{{url_for(item.url)}}">{{item.url}}</a>
+                <a target="_blank" href="http://{{item.url}}">{{item.url}}</a>
                 <span class="badge badge-primary">{{item.seen_time | datetimeformat}}</span>
                 <span style="display: inline-block;" class="badge">{{item.status}}</span>
                 {% if item.body %}
