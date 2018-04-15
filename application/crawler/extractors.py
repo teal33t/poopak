@@ -17,21 +17,14 @@ class Extractor:
             parsed_href = urlparse(href)
 
             if parsed_href.netloc != "":
+                href = urlunparse((parsed_href.scheme, parsed_href.netloc, parsed_href.path, '', parsed_href.query, ''))
+            if parsed_href.netloc != "":
                 if parsed_href.netloc == parsed_url.netloc:
-                    href = urlunparse((parsed_href.scheme, parsed_href.netloc, parsed_href.path, '', parsed_href.query, ''))
-            if href.startswith('//'):
-                if parsed_href.netloc == parsed_url.netloc:
-                    href = urlunparse((parsed_url.scheme, parsed_href.netloc, parsed_href.path, '', parsed_href.query, ''))
+                    href = urlunparse((parsed_url.scheme, parsed_url.netloc, parsed_href.path, '', parsed_href.query, ''))
             if href.startswith('/') or href.startswith('?'):
                 href = urlunparse((parsed_url.scheme, parsed_url.netloc, parsed_href.path, '', parsed_href.query, ''))
-            if href == "" or href.startswith("#"):
-                href = self.base_url
-            if href == "/":
-                href = self.base_url
-            else:
-                href = urlunparse((parsed_url.scheme, parsed_url.netloc, parsed_href.path, '', parsed_href.query, ''))
-            # parsed_href = urlparse(href)
-            # href = self.absolute(href)
+            # else:
+            #     href = urlunparse((parsed_url.scheme, parsed_url.netloc, parsed_href.path, '', parsed_href.query, ''))
             is_onion =  True if '.onion' in parsed_href.netloc else False
             in_scope = True if parsed_href.netloc == parsed_url.netloc else False
             _urls.append({'url': href, 'is_onion': is_onion, 'in_scope': in_scope})
