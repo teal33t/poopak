@@ -12,7 +12,7 @@ def get_headers():
   ]
   return headers
 
-def query(url, depth=0):
+def query(url):
 
     output = io.BytesIO()
     seen_time = datetime.datetime.utcnow()
