@@ -70,6 +70,15 @@ services:
     networks:
       - app-tier
 
+  splash:
+    image: scrapinghub/splash
+    networks:
+      - app-tier
+    ports:
+      - 5023:8050
+#    volumes:
+#      - ./splash/proxy-profiles:/etc/splash/proxy-profiles:ro
+
   # application
   web-app:
     restart: always

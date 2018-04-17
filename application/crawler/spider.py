@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 
-from .config_crawler import *
-from pymongo import MongoClient
 from .curl import query
-from  .extractors import Extractor
-# from web import q
+from  .html_extractors import Extractor
 from .data_storage import DataStorage
+
+import uuid
 
 from rq import Queue
 from worker import conn
-# q = Queue(name="high",connection=conn)
+
+from .screenshot import get_screenshot
 
 def go_depth(target, parent, depth=0, is_onion=True,
              in_scope=False, use_proxy=True, re_crawl=True):
@@ -56,6 +56,8 @@ class Spider:
         if self.response['status']:
             if 'html' in self.response:
                 data = Extractor(base_url=self.base_url, html=self.response['html'])
+
+
                 json_data = {'url': self.base_url,
                         'status': self.response['status'],
                         'html': self.response['html'],
@@ -65,18 +67,26 @@ class Spider:
                         'seen_time': self.response['seen_time'],
                         'parent': self.parent}
 
-        self._save_or_update(json_data)
 
-        if self.depth: # depth > 0
-            depth_step = 0
-            while depth_step < self.depth: # while step not reached the thr
-                for link in json_data['links']:
-                    self.q.enqueue_call(func=go_depth,
-                                   args=(link['url'], self.base_url,
-                                         depth_step, link['is_onion'],
-                                         link['in_scope'],),
-                                   ttl=86400, result_ttl=1)
-                depth_step = depth_step + 1
+                if int(self.response['status']) == 200: #OK
+                    filename = uuid.uuid4().hex
+                    get_screenshot(self.base_url, filename)
+                    json_data['capture_name'] = filename
+
+
+            self._save_or_update(json_data)
+
+            if self.depth: # depth > 0
+                depth_step = 0
+                while depth_step < self.depth: # while step not reached the thr
+                    for link in json_data['links']:
+                        self.q.enqueue_call(func=go_depth,
+                                       args=(link['url'], self.base_url,
+                                             depth_step, link['is_onion'],
+                                             link['in_scope'],),
+                                       ttl=86400, result_ttl=1)
+                    depth_step = depth_step + 1
+
 
 
                         # def add_to_queue(self, link):

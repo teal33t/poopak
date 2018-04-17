@@ -9,10 +9,17 @@ else:
 	tor_pool_url = "torpool"
 	tor_pool_port = 5566
 
+splash_host = "splash"
+splash_port = 8050
+
 max_try_count   =   3
 REQUEST_TIMEOUT = 5
 CONNECTION_TIMEOUT = 25
 FOLLOWLOCATION = True
+
+SCR_PATH = "/app/screenshots/"
+
+#curl 'http://splash:8050/render.html?url=http://wallstyizjhkrvmj.onion/&proxy=socks://torpool:5566'
 
 http_codes = {
 		"None" : "Input a valid HTTP URL",
@@ -42,3 +49,12 @@ http_codes = {
 		304    : "The server did not send the document body since the document has not been modified "+
 		         "since the date and time specified in If-Modified-Since field."
 }
+
+
+def get_splash_uri(url):
+	return "http://%s:%d/render.png?url=%s&proxy=socks5://%s:%d" % \
+		   (splash_host, splash_port, url, tor_pool_url, tor_pool_port)
+
+
+def get_save_path(filename):
+	return "%s%s.png" % (SCR_PATH, filename)

@@ -41,3 +41,5 @@ class Extractor:
             return self.soup.title.get_text()
         except:
             return ""
+
+

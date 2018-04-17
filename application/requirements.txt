@@ -23,3 +23,5 @@ flask-script
 flask-rq2
 pycurl
 bs4
+homura
+gunicorn
