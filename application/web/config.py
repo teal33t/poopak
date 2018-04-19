@@ -11,3 +11,4 @@ else:
     mongodb_uri = "mongodb://%s:%s@mongodb:27017/crawler" % ("admin", "123qwe")
 
 seed_upload_dir = "/app/seeds/"
+scr_upload_dir = "/app/screenshots/"

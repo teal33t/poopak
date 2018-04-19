@@ -2,7 +2,6 @@ import io
 import pycurl
 import datetime
 from .config_crawler import *
-from .html_extractors import *
 
 def get_headers():
   ua = "Mozilla/5.0 (Windows NT 6.1; rv:45.0) Gecko/20100101 Firefox/45.0"
@@ -54,7 +53,7 @@ def query(url):
         except pycurl.error:
             try_count = try_count + 1
             resp = {"url": url,
-                    "status": 503,
+                    "status": 503, # Not server exist
                     "seen_time": seen_time}
 
     # if depth > 0:

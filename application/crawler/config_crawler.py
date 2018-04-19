@@ -19,10 +19,18 @@ FOLLOWLOCATION = True
 
 SCR_PATH = "/app/screenshots/"
 
-#curl 'http://splash:8050/render.html?url=http://wallstyizjhkrvmj.onion/&proxy=socks://torpool:5566'
+
+polyglot_host = "polyglot-service"
+polyglot_port = 34567
+
+
+# wget -q -O - "http://localhost:34567/detect?q=Hello World!"
+def get_polyglot_uri(phrase):
+	return "http://%s:%d/detect?q='%s'" % (polyglot_host, polyglot_port, phrase)
+
+
 
 http_codes = {
-		"None" : "Input a valid HTTP URL",
 		200    : "OK",
 		201    : "The POST command was a success!",
 		202    : "Request for processing accepted but it may be disallowed when processing actually takes place.",
@@ -51,6 +59,7 @@ http_codes = {
 }
 
 
+#curl 'http://splash:8050/render.html?url=http://wallstyizjhkrvmj.onion/&proxy=socks://torpool:5566'
 def get_splash_uri(url):
 	return "http://%s:%d/render.png?url=%s&proxy=socks5://%s:%d" % \
 		   (splash_host, splash_port, url, tor_pool_url, tor_pool_port)

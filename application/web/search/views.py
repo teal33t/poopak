@@ -48,7 +48,9 @@ def search(phrase, page_number=1):
     try:
         all_count = client.crawler.documents.find({"body": re.compile(regex, re.IGNORECASE)}).count()
         pagination = Pagination(page_number, n_per_page, all_count)
-        all = client.crawler.documents.find({"body": re.compile(regex, re.IGNORECASE)}).sort("seen_time", DESCENDING).skip(
+        all = client.crawler.documents.find(
+            {"body": re.compile(regex, re.IGNORECASE)}
+        ).sort("seen_time", DESCENDING).skip(
             (page_number - 1) * n_per_page).limit(n_per_page)
     except:
         return render_template('result.html',phrase=phrase, all_count=0,

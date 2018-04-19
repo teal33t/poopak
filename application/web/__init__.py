@@ -1,5 +1,4 @@
-from flask import Flask, redirect, url_for
-# from flask_login import LoginManagercurrent_user
+from flask import Flask, redirect, url_for, send_from_directory
 import flask_login
 from flask_wtf.csrf import CSRFProtect
 from pymongo import MongoClient
@@ -9,7 +8,7 @@ from web.models import User
 
 from crawler import run as run_crawler
 from worker import conn
-from .config import redis_uri, mongodb_uri
+from .config import redis_uri, mongodb_uri, scr_upload_dir
 
 # import datetime
 # import uuid
@@ -100,6 +99,10 @@ from .errors import *
 
 
 
+@app.route('/screenshots/<path:filename>')
+def screenshots_path(filename):
+    _filename = "%s.png" % filename
+    return send_from_directory( scr_upload_dir , _filename)
 
 # @app.route('/', methods=['GET', 'POST'])
 # def index():

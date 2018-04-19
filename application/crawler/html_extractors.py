@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 from urllib.parse import urlparse, urlunparse
 
 
+
 class Extractor:
 
     def __init__(self, base_url, html):
@@ -34,12 +35,11 @@ class Extractor:
         try:
             return self.soup.body.get_text(" ",strip=True)
         except:
-            return ""
+            pass
 
     def get_title(self):
         try:
             return self.soup.title.get_text()
         except:
-            return ""
-
+            pass
 

@@ -7,4 +7,5 @@ mongodb
 *.log
 *.rdp
 __pycache__
-
+application/screenshots/*.*
+application/seeds/*.*

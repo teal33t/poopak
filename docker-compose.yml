@@ -14,7 +14,6 @@ networks:
   app-tier:
     driver: bridge
 
-
 services:
   #data bus
   redis:
@@ -56,7 +55,6 @@ services:
 #      - default
       - app-tier
 
-
   server:
     restart: always
     image: nginx
@@ -72,12 +70,21 @@ services:
 
   splash:
     image: scrapinghub/splash
+    restart: always
     networks:
       - app-tier
     ports:
       - 5023:8050
-#    volumes:
-#      - ./splash/proxy-profiles:/etc/splash/proxy-profiles:ro
+
+  polyglot-service:
+#    image: turbulent/polyglot-service
+    restart: always
+    build: ./polyglot-service
+#    image: polyglot-service
+    networks:
+      - app-tier
+    ports:
+      - 3567:3567
 
   # application
   web-app:

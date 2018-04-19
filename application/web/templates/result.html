@@ -13,11 +13,16 @@
         <ul class="list-unstyled">
             {% for item in results: %}
             <li>
+                {% if item.status == 200 %}
+                <a href="{{ url_for('screenshots_path', filename=item.capture_id)}}" target="_blank">
+                    <img src="{{ url_for('screenshots_path', filename=item.capture_id)}}" class="pull-left img-thumbnail col-md-2" style="margin: 10px;">
+                </a>
+                {% endif %}
+
                 <a target="_blank" href="http://{{item.url}}">
                     <span class="highlight">{{item.title}}</span>
                 </a>
-
-                <span class="badge">{{item.last_seen | datetimeformat}}</span>
+                {{item.capture_id}}
                 <cite style="display: block;" class="text-success">{{item.url}}</cite>
                 <cite style="display: inline-block;" class="badge badge-info">{{item.status}}</cite>
                 <cite style="display: inline-block;" class="badge badge-success">{{item.seen_time | datetimeformat}}</cite>
@@ -25,6 +30,7 @@
                 <p style="word-wrap: break-word;">
                     {{item.body | limitbody}}
                 </p>
+                <div class="clearfix"></div>
                 <hr>
             </li>
             {% endfor %}

@@ -13,6 +13,14 @@
         <ul class="list-unstyled">
             {% for item in results: %}
             <li>
+                {% if item.status == 200 %}
+
+                <a href="{{ url_for('screenshots_path', filename=item.capture_id)}}" target="_blank">
+                    <img src="{{ url_for('screenshots_path', filename=item.capture_id)}}" class="pull-left img-thumbnail col-md-2" style="margin: 10px;">
+                </a>
+
+                {% endif %}
+
                 {% if item.title %}
                 <a target="_blank" href="http://{{item.url}}">
                     <span class="highlight">{{item.title}}</span>
@@ -30,6 +38,7 @@
                     {{item.body | limitbody(256)}}
                 </p>
                 {% endif %}
+                <div class="clearfix"></div>
                 <hr>
             </li>
             {% endfor %}
