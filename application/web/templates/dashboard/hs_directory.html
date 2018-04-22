@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block body %}
+
+{% include 'dashboard/nav.html' %}
+
+
+<div class="container" style="margin-top: 5%;">
+    <div class="col-md-12">
+        <a class="btn btn-success" href="{{url_for('search.directory')}}">Alive onion pages [HTTP 200]</a>
+        <a class="btn btn-info" href="{{url_for('search.directory_all')}}">ALL</a> &nbsp; | &nbsp;
+        <a class="btn btn-default" href="{{url_for('search.export_csv')}}">Export alive list</a>
+      <h4 class="text-center">
+        Total found {{all_count}}
+      </h4>
+        {% if results:%}
+        <ul class="list-unstyled">
+            {% for item in results: %}
+            <li>
+                {% if item.status == 200 %}
+
+                <a href="{{ url_for('screenshots_path', filename=item.capture_id)}}" target="_blank">
+                    <img src="{{ url_for('screenshots_path', filename=item.capture_id)}}" class="pull-left img-thumbnail col-md-2" style="margin: 10px;">
+                </a>
+
+                {% endif %}
+
+                {% if item.title %}
+                <a target="_blank" href="http://{{item.url}}">
+                    <span class="highlight">{{item.title}}</span>
+
+                </a>
+                <a style="display: inline-block;" class="btn badge badge-danger" href="{{url_for('search.report', id=item._id) }}" >report</a>
+
+                <br/>
+                {% endif %}
+                <a target="_blank" href="http://{{item.url}}">{{item.url}}</a>
+                <span class="badge badge-primary">{{item.seen_time | datetimeformat}}</span>
+                <span style="display: inline-block;" class="badge">{{item.status}}</span>
+                {% if item.body %}
+                <p style="word-wrap: break-word;">
+                    {{item.body | limitbody(256)}}
+                </p>
+                {% endif %}
+                <div class="clearfix"></div>
+                <hr>
+            </li>
+            {% endfor %}
+        </ul>
+
+  <ul class=pagination>
+  {%- for page in pagination.iter_pages() %}
+    {% if page %}
+      {% if page != pagination.page %}
+        {% if is_all %}
+        <li><a href="{{url_for('search.directory_all',page_number=page)}}">{{ page }}</a></li>
+        {%else%}
+        <li><a href="{{url_for('search.directory',page_number=page)}}">{{ page }}</a></li>
+        {% endif %}
+      {% else %}
+        {% if is_all %}
+        <li><a href="{{url_for('search.directory_all',page_number=page)}}"><strong>{{ page }}</strong></a></li>
+        {%else%}
+        <li><a href="{{url_for('search.directory',page_number=page)}}"><strong>{{ page }}</strong></a></li>
+        {% endif %}
+      {% endif %}
+    {% else %}
+
+    {% endif %}
+  {%- endfor %}
+  {% if pagination.has_next %}
+        {% if is_all %}
+          <li><a href="{{url_for('search.directory_all', page_number=pagination.page + 1)}}">Next &raquo;</a></li>
+        {% else %}
+          <li><a href="{{url_for('search.directory', page_number=pagination.page + 1)}}">Next &raquo;</a></li>
+        {% endif %}
+  {% endif %}
+  </ul>
+
+  </div>
+
+    {% endif %}
+</div>
+
+{% endblock %}

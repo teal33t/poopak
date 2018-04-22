@@ -6,18 +6,23 @@
 <script src="{{url_for('static', filename='js/jquery-ui.js')}}"></script>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery-ui.css')}}" >
 
-<script>
-    $(function() {
-        $( ".frmdtpick" ).datepicker();
-    });
-</script>
+    <script>
+        $(function() {
+            $( ".frmdtpick" ).datepicker();
+        });
+    </script>
 
-<script>
-    $(function() {
-        $( ".todtpick" ).datepicker();
-    });
-</script>
+    <script>
+        $(function() {
+            $( ".todtpick" ).datepicker();
+        });
+    </script>
 
+<div>
+
+
+
+</div>
 
 <div class="col-md-12">
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -36,7 +41,7 @@
             &nbsp;Dashboard
         </h3>
     </div>
-
+{% include 'dashboard/nav.html' %}
 </div>
 <div class="dashboard col-md-12">
 
@@ -113,73 +118,6 @@
         </table>
 
         {% endif %}
-
-    </div>
-</div>
-
-
-<div class="col-md-12 dashboard" style="margin-top: 15px;">
-    <h4>
-        <i class="glyphicon glyphicon-list"></i>Upload a seed
-    </h4>
-    <hr/>
-    <div class="col-md-12">
-        <form method="POST" enctype="multipart/form-data" action="{{url_for('dashboard.dashboard')}}">
-            <table class="table table-bordered">
-              <tr>
-                <th>Upload your seed list or paste the list in the text area field.</th>
-                <td>
-                        {{multiple_urls_form.seed_file(class="form-control", style="height: auto;")}}
-                </td>
-              </tr>
-              <tr>
-                <th rowspan="2">
-                        {{multiple_urls_form.urls(class="form-control", style="height: 140px;")}}
-                </th>
-                <td class="text-center" style="max-width: 300px;">
-                    <table class="table">
-                        <tr>
-                            <td><b>EMAILS</b></td><td>{{multiple_urls_form.extract_emails(style="display:inline;")}}</td>
-                            <td><b>BITCOIN ADDRESSES</b></td><td>{{multiple_urls_form.extract_btcaddr(style="display:inline;") }}</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <b>PUBLIC PGP</b>
-                            </td>
-                            <td>
-                                {{multiple_urls_form.extract_pub_pgp(style="display:inline;", disabled="disabled") }}
-                            </td>
-                      <td>
-                        <b>EXIF Check</b>
-
-                            </td>
-                            <td>
-                                {{multiple_urls_form.extract_pub_pgp(style="display:inline;", disabled="disabled") }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <b>PRIVATE PGP</b>
-                            </td>
-                            <td>
-                                {{multiple_urls_form.extract_pub_pgp(style="display:inline;", disabled="disabled") }}
-                            </td>
-                        </tr>
-                        <tr>
-
-                        </tr>
-                    </table>
-                </td>
-              </tr>
-              <tr>
-                <td class="text-center">
-                        {{multiple_urls_form.submit(class="btn btn-success")}}
-
-                </td>
-              </tr>
-            </table>
-            {{multiple_urls_form.csrf_token() }}
-        </form>
 
     </div>
 </div>

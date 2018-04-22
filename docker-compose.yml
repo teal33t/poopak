@@ -76,16 +76,6 @@ services:
     ports:
       - 5023:8050
 
-  polyglot-service:
-#    image: turbulent/polyglot-service
-    restart: always
-    build: ./polyglot-service
-#    image: polyglot-service
-    networks:
-      - app-tier
-    ports:
-      - 3567:3567
-
   # application
   web-app:
     restart: always

@@ -17,17 +17,7 @@ REQUEST_TIMEOUT = 5
 CONNECTION_TIMEOUT = 25
 FOLLOWLOCATION = True
 
-SCR_PATH = "/app/screenshots/"
-
-
-polyglot_host = "polyglot-service"
-polyglot_port = 34567
-
-
-# wget -q -O - "http://localhost:34567/detect?q=Hello World!"
-def get_polyglot_uri(phrase):
-	return "http://%s:%d/detect?q='%s'" % (polyglot_host, polyglot_port, phrase)
-
+SCR_PATH = "/app/files/screenshots/"
 
 
 http_codes = {

@@ -37,7 +37,6 @@ def query(url):
             html = response.decode('utf8')
 
             if http_code in http_codes:
-                # print (html)
                 if http_code == 200:
                     resp = {"url": url,
                             "html": html,
@@ -55,13 +54,6 @@ def query(url):
             resp = {"url": url,
                     "status": 503, # Not server exist
                     "seen_time": seen_time}
-
-    # if depth > 0:
-    #     depth_step = 1
-    #     resp = []
-    #     urls = extract_onions(html)
-    #     while depth <= depth_step:
-    #         resp.append(query(url))
 
     return resp
 

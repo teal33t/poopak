@@ -14,9 +14,9 @@ def login():
     if current_user.is_authenticated:
         redirect(url_for("dashboard.dashboard"))
     if captcha.validate():
-        print ("TEST")
+        # print ("TEST")
         if request.method == 'POST' and form.validate_on_submit():
-            print("TEST1")
+            # print("TEST1")
             user = client.crawler.users.find_one({"_id": form.username.data})
             if user and User.validate_login(user['password'], form.password.data):
                 user_obj = User(user['_id'])

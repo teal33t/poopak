@@ -10,10 +10,88 @@ from web.filters import *
 from web.helper import extract_onions
 from web.search.forms import SearchForm
 from web.stats import onion_stats as oss
+from web.paginate import Pagination
 from werkzeug.utils import secure_filename
 from time import sleep
 from . import dashboardbp
 from .forms import *
+
+
+@dashboardbp.route('/hs_directory/', methods=["GET"])
+@dashboardbp.route('/hs_directory/<int:page_number>', methods=["GET"])
+def hs_directory(page_number=1):
+    search_form = SearchForm()
+    try:
+        all_count = client.crawler.documents.find({'status':200}).count()
+        pagination = Pagination(page_number, n_per_page, all_count)
+        all = client.crawler.documents.find({'status':200}).sort("seen_time", DESCENDING).skip(
+            (page_number - 1) * n_per_page).limit(n_per_page)
+    except:
+        print ("ERROR[?]")
+        return render_template('dashboard/hs_directory.html',
+                               search_form=search_form,
+                               all_count=0)
+
+    return render_template('dashboard/hs_directory.html',
+                           results=all,
+                           pagination=pagination,
+                           search_form=search_form,
+                           all_count=all_count)
+
+
+@dashboardbp.route('/statistics', methods=['GET', 'POST'])
+@login_required
+def statistics():
+    pass
+
+
+@dashboardbp.route('/settings', methods=['GET', 'POST'])
+@login_required
+def settings():
+    pass
+
+@dashboardbp.route('/upload_seed', methods=['GET', 'POST'])
+@login_required
+def upload_seed():
+    search_form = SearchForm(request.form)
+    multiple_urls_form = MultipleOnion()
+    if multiple_urls_form.validate_on_submit():
+        seeds = []
+        print("FORM")
+        if multiple_urls_form.seed_file.data:
+            filename = secure_filename(multiple_urls_form.seed_file.data.filename)
+            path_to_save = seed_upload_dir + filename
+            multiple_urls_form.seed_file.data.save(path_to_save)
+
+            _seed_file = open(path_to_save, 'r')
+            seed_file = extract_onions(_seed_file.read())
+            _seed_file.close()
+
+            for seed in seed_file:
+                seeds.append(seed.strip())
+
+        # print (multiple_urls_form.urls.data)
+        # print ("*"*100)
+        if multiple_urls_form.urls.data:
+            urls = extract_onions(multiple_urls_form.urls.data)
+            for url in urls:
+                seeds.append(url.strip())
+
+        for seed in seeds:
+            print(seed)
+            q.enqueue_call(func=run_crawler, args=(seed,), ttl=86400, result_ttl=1)
+            # sleep(0.1) #delay between jobs
+            # print (job.result)
+
+        flash('New onions added to crawler queue ', 'success')
+        return render_template('dashboard/upload_seed.html', search_form=search_form,
+                               multiple_urls_form=multiple_urls_form)
+
+    return render_template('dashboard/upload_seed.html', search_form=search_form,
+                           multiple_urls_form=multiple_urls_form)
+
+
+    print (multiple_urls_form.errors)
 
 
 @dashboardbp.route('/', methods=['GET', 'POST'])
@@ -22,7 +100,6 @@ def dashboard():
     search_form = SearchForm(request.form)
     range_stats_form = RangeStats()
     status_count = oss.get_requests_stats_all()
-    multiple_urls_form = MultipleOnion()
     # print ("*"*1000)
     last_200 = 0
     last_all = 0
@@ -48,53 +125,18 @@ def dashboard():
                 dateutil.parser.parse(str(range_stats_form.from_dt.data)),
                 dateutil.parser.parse(str(range_stats_form.to_dt.data))
             )
-            return render_template('dashboard.html', search_form=search_form,
+            return render_template('dashboard/dashboard.html', search_form=search_form,
                                    status_count=status_count, range_stats=range_stats_form,
                                    time_series=time_series,multiple_urls_form=multiple_urls_form,
                                    last_200=last_200, last_all=last_all)
 
-    print ("DASHBOARD BEFORE FORM")
-    if multiple_urls_form.validate_on_submit():
-        seeds = []
-        print ("FORM")
-        if multiple_urls_form.seed_file.data:
-            filename = secure_filename(multiple_urls_form.seed_file.data.filename)
-            path_to_save = seed_upload_dir + filename
-            multiple_urls_form.seed_file.data.save(path_to_save)
-
-            _seed_file = open(path_to_save,'r')
-            seed_file = extract_onions(_seed_file.read())
-            _seed_file.close()
-
-            for seed in seed_file:
-                seeds.append(seed.strip())
-
-        # print (multiple_urls_form.urls.data)
-        # print ("*"*100)
-        if multiple_urls_form.urls.data:
-            urls = extract_onions(multiple_urls_form.urls.data)
-            for url in urls:
-                seeds.append(url.strip())
-
-        for seed in seeds:
-            print (seed)
-            q.enqueue_call(func=run_crawler, args=(seed,), ttl=86400, result_ttl=1)
-                # sleep(0.1) #delay between jobs
-                # print (job.result)
-
-        flash('New onions added to crawler queue ' ,'success')
-        return render_template('dashboard.html', search_form=search_form,
-                               status_count=status_count, range_stats=range_stats_form,
-                               multiple_urls_form=multiple_urls_form,
-                               last_200=last_200, last_all=last_all)
-
-    print (multiple_urls_form.errors)
 
 
 
-    return render_template('dashboard.html', search_form=search_form,
+
+    return render_template('dashboard/dashboard.html', search_form=search_form,
                            status_count=status_count, range_stats=range_stats_form,
-                           multiple_urls_form=multiple_urls_form, last_200=last_200, last_all=last_all)
+                            last_200=last_200, last_all=last_all)
 
 
 

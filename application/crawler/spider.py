@@ -10,9 +10,6 @@ import uuid
 from rq import Queue
 from worker import conn
 
-from .detectors import detect_lang_locale
-
-
 from .screenshot import get_screenshot
 
 def go_depth(target, parent, depth=0, is_onion=True,
@@ -73,8 +70,6 @@ class Spider:
                     filename = uuid.uuid4().hex
                     get_screenshot(self.base_url, filename)
                     json_data['capture_id'] = filename
-
-                    # json_data['language'] = detect_lang_locale(body)
 
 
             self._save_or_update(json_data)
