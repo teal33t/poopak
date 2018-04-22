@@ -5,7 +5,7 @@ Pipefile.lock
 mongodb
 .DS_Store
 *.log
-*.rdp
+*.rdb
 __pycache__
 application/screenshots/*.*
 application/seeds/*.*
