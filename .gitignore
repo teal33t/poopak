@@ -7,5 +7,5 @@ mongodb
 *.log
 *.rdb
 __pycache__
-application/screenshots/*.*
-application/seeds/*.*
+application/files/screenshots/*.png
+application/files/seeds/*.*
