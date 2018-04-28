@@ -11,7 +11,7 @@ from urllib.parse import urlparse
 manager = Manager(app)
 manager.add_command(
     'runserver',
-    Server(port=8000, use_debugger=True, use_reloader=True, host="0.0.0.0"))
+    Server(use_debugger=True, use_reloader=True))
 
 # there are 4 workers
 

@@ -13,5 +13,13 @@ project is to have a full featured OSINT application for dark web and TOR resear
 * Multi-level crawling
 * Extract urls, bitcoin addresses, emails, PGP keys and EXIF files.
 * Port scanning
-* Footprinting
+* Web application foot-printing
 
+### TODO (on-going)
+- EXIF meta data
+- Bitcoin addresss detection
+- Emails
+- PGP Detection
+- Re-design Panel
+- Port Scanning
+- Web application foot-printing
