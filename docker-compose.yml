@@ -1,24 +1,25 @@
 version: '3'
 
-
 # NGINX 
 # FLASK
 # MONGODB
 # REDIS
 # REDIS WORKER
 # TOR + HA PROXY
-# [-] MONGOCLIENT 
-
+# [-] MONGOCLIENT
 
 networks:
   app-tier:
     driver: bridge
 
 services:
+
+
   #data bus
   redis:
     image: 'bitnami/redis:latest'
     hostname: redis
+    container_name: redis
     ports:
       - '6379:6379'
     environment:
@@ -41,7 +42,6 @@ services:
     networks:
       - app-tier
 
-  # proxy load balancer
   torpool:
     image: 'zeta0/alpine-tor'
     hostname: torpool
@@ -60,7 +60,7 @@ services:
     image: nginx
     volumes:
       - ./web-server/conf.d:/etc/nginx/conf.d
-      - ./application/web/static:/app/static
+      - ./application/web/static:/application/static
     links:
       - web-app:web-app
     ports:
@@ -76,16 +76,24 @@ services:
     ports:
       - 5023:8050
 
-  # application
+
+  spacy:
+    image: jgontrum/spacyapi
+    restart: always
+    networks:
+      - app-tier
+    ports:
+      - 8080:80
+
   web-app:
     restart: always
     build: ./application
     image: web-app
     container_name: web-app
 #    command: python app.py
-    command: bash -c "/wait && gunicorn app:app -b :8000 --name app --log-level=debug --log-file=-"
+    command: bash -c "/wait && gunicorn manage:app -b :8000 --name app --log-level=debug --log-file=-"
     volumes:
-       - ./application:/app
+       - ./application:/application
 #    ports:
 #      - "5050:5050"
     expose:
@@ -96,22 +104,26 @@ services:
        - mongodb
        - torpool
        - redis
-       - rq-worker
+       - crawler-worker
+       - detector-worker
+       - app-worker
     networks:
        - app-tier
     environment:
       WAIT_HOSTS: mongodb:27017
       WAIT_BEFORE_HOSTS: 25
 
-  rq-worker:
+
+
+  crawler-worker:
      restart: always
      build: ./application
-     container_name: rq-worker
-     command: bash -c "/wait && python worker.py"
+     container_name: crawler-worker
+     command: bash -c "/wait && python manage.py run_crawler_worker"
      networks:
       - app-tier
      volumes:
-      - ./application:/app
+      - ./application:/application
      depends_on:
       - redis
      links:
@@ -122,6 +134,65 @@ services:
       WAIT_HOSTS: redis:6379
       WAIT_BEFORE_HOSTS: 5
 
+
+
+  detector-worker:
+     restart: always
+     build: ./application
+     container_name: detector-worker
+     command: bash -c "/wait && python manage.py run_detector_worker"
+     networks:
+      - app-tier
+     volumes:
+      - ./application:/application
+     depends_on:
+      - redis
+     links:
+      - torpool
+      - redis
+      - mongodb
+     environment:
+      WAIT_HOSTS: redis:6379
+      WAIT_BEFORE_HOSTS: 5
+
+  app-worker:
+     restart: always
+     build: ./application
+     container_name: app-worker
+     command: bash -c "/wait && python manage.py run_app_worker"
+     networks:
+      - app-tier
+     volumes:
+      - ./application:/application
+     depends_on:
+      - redis
+     links:
+      - torpool
+      - redis
+      - mongodb
+     environment:
+      WAIT_HOSTS: redis:6379
+      WAIT_BEFORE_HOSTS: 5
+
+
+  panel-worker:
+     restart: always
+     build: ./application
+     container_name: panel-worker
+     command: bash -c "/wait && python manage.py run_panel_worker"
+     networks:
+      - app-tier
+     volumes:
+      - ./application:/application
+     depends_on:
+      - redis
+     links:
+      - torpool
+      - redis
+      - mongodb
+     environment:
+      WAIT_HOSTS: redis:6379
+      WAIT_BEFORE_HOSTS: 5
 
 
   mongoclient:

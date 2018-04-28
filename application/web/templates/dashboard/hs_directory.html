@@ -3,12 +3,15 @@
 
 {% include 'dashboard/nav.html' %}
 
+<style>
+    .ds-btn li{ list-style:none; float:left; padding:10px; }
+    .ds-btn li a span{padding-left:15px;padding-right:5px;width:100%;display:inline-block; text-align:left;}
+    .ds-btn li a span small{width:100%; display:inline-block; text-align:left;}
+</style>
 
 <div class="container" style="margin-top: 5%;">
     <div class="col-md-12">
-        <a class="btn btn-success" href="{{url_for('search.directory')}}">Alive onion pages [HTTP 200]</a>
-        <a class="btn btn-info" href="{{url_for('search.directory_all')}}">ALL</a> &nbsp; | &nbsp;
-        <a class="btn btn-default" href="{{url_for('search.export_csv')}}">Export alive list</a>
+
       <h4 class="text-center">
         Total found {{all_count}}
       </h4>
@@ -26,10 +29,10 @@
 
                 {% if item.title %}
                 <a target="_blank" href="http://{{item.url}}">
-                    <span class="highlight">{{item.title}}</span>
+                    <span class="highlight">{{item.title}}</span> &nbsp;
 
                 </a>
-                <a style="display: inline-block;" class="btn badge badge-danger" href="{{url_for('search.report', id=item._id) }}" >report</a>
+                <a style="display: inline-block;" class="btn badge badge-danger" href="{{url_for('dashboard.hs_view', id=item._id) }}" >VIEW</a>
 
                 <br/>
                 {% endif %}
@@ -40,6 +43,9 @@
                 <p style="word-wrap: break-word;">
                     {{item.body | limitbody(256)}}
                 </p>
+                {% endif %}
+                {% if item.links | length %}
+                    <span class="badge badge-info">{{item.links | length}} Included links</span>
                 {% endif %}
                 <div class="clearfix"></div>
                 <hr>

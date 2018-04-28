@@ -6,16 +6,19 @@ from flask import request, redirect, url_for, flash, render_template, Response
 from pymongo import DESCENDING
 from web import captcha
 from web import client
-from web import q
-from web import run_crawler
+
+from web.queues import crawler_q
 from web.config import *
 from web.filters import *
+
+from web import run_crawler
 from .forms import SearchForm, AddOnionForm, ReportOnionForm
 
 from web.paginate import Pagination
 from . import searchbp
 
 import time
+from urllib.parse import urlparse, urlunparse
 
 @searchbp.route('/', methods=['GET', 'POST'])
 def index():
@@ -117,8 +120,11 @@ def add_onion():
             print ("SEARCH BEFORE TRY")
             try:
 
-                print (url)
-                job = q.enqueue_call(
+                # print (url)
+                parsed_url = urlparse(url)
+                if parsed_url.scheme == None or parsed_url.scheme == "":
+                    url = "http://%s" % url
+                job = crawler_q.enqueue_call(
                     func=run_crawler, args=(url,), ttl=60, result_ttl=10
                 )
                 print (job)

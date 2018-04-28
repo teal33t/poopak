@@ -15,3 +15,5 @@ class MultipleOnion(FlaskForm):
     extract_btcaddr = BooleanField("Extract BTC addresses")
     extract_pub_pgp = BooleanField("Extract Pub PGP Key")
     submit = SubmitField("Run Crawler")
+
+

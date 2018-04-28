@@ -14,6 +14,12 @@ def limitbody(value, size=700):
         body = value.strip()
         return ("%s..." % body[:size] )
 
+# @app.template_filter('recreate_neturi')
+# def recreate_neturi(base_url, con_url):
+#     if con_url.in_scope == True and con_url.is_onion == True:
+#
+#         return "%s%s" % (base_url, con_url)
+
 
 # @app.template_filter('http_rpr')
 # def http_rpr(code):

@@ -43,84 +43,6 @@
     </div>
 {% include 'dashboard/nav.html' %}
 </div>
-<div class="dashboard col-md-12">
-
-    <div class="col-md-3">
-        <table class="table" style="font-weight: bold; border: 1px solid #ccc;">
-            <thead>
-                <tr>
-                    <td>HTTP Status</td>
-                    <td></td>
-                </tr>
-            </thead>
-            {% for item in status_count %}
-                <tr>
-                    <td>
-                        {{item.type}}
-                    </td>
-                    <td align="center">
-                        {{item.count}}
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
-    </div>
-    <div class="col-md-9">
-
-        <form method="post" action="{{url_for('dashboard.dashboard')}}">
-            {{ range_stats.hidden_tag() }}
-            <table class="table">
-                <tr>
-                    <td>
-                        From date
-                    </td>
-                    <td>
-                        {{ range_stats.from_dt(class="frmdtpick text-center") }}
-                    </td>
-                    <td>To date</td>
-                    <td>
-                        {{ range_stats.to_dt(class="todtpick text-center") }}
-                    </td>
-                    <td>
-                        {{ range_stats.submit(class="btn btn-info", style="width: 100px;")}}
-                    </td>
-                </tr>
-
-            </table>
-        </form>
-
-        {% if time_series %}
-
-        <table class="table">
-            <tr class="active">
-                <td class="text-center">
-                    From &nbsp;{{range_stats.from_dt.data}}
-                </td>
-                <td class="text-center">
-                    To &nbsp;{{range_stats.from_dt.data}}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Status
-                </td>
-                <td>
-                    Count
-                </td>
-            </tr>
-            {% for item in time_series %}
-            <tr>
-                <td style="font-weight: bold;">{{item.type}}</td>
-                <td style="font-weight: bold;">{{item.count}}</td>
-            </tr>
-            {% endfor %}
-
-        </table>
-
-        {% endif %}
-
-    </div>
-</div>
 
 <div class="col-md-12 dashboard" style="margin-top: 15px;">
     <h5>
@@ -141,6 +63,9 @@
                     <td>
                         Body
                     </td>
+                    <td>
+                        Parent
+                    </td>
                 </tr>
             </thead>
             {% for item in last_200 %}
@@ -149,7 +74,15 @@
                         <i class="glyphicon glyphicon-check text-success"></i>&nbsp;
                         {{item.seen_time | datetimeformat}}</td>
                     <td width="25%"><a href="http://{{item.url}}" target="_blank">{{item.url}}</a></td>
-                    <td width="40%">{{item.title}}</td>
+                    <td width="25%">{{item.title}}</td>
+                    <td width="25%">
+                        {% if item.parent %}
+                            {{item.parent}}
+                        {% else %}
+                            <i class="glyphicon glyphicon-check"></i>
+                        {% endif %}
+
+                    </td>
                 </tr>
             {% endfor %}
         </table>

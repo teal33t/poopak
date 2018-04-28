@@ -13,8 +13,8 @@ class DataStorage:
             return False
 
     def add_crawled_url(self, data):
-        self.client.crawler.documents.insert_one(data)
-        return True
+        obj = self.client.crawler.documents.insert_one(data)
+        return obj.inserted_id
 
     def update_crawled_url(self, url, data):
         self.client.crawler.documents.update_one({'url': url}, {"$set": data}, upsert=False)

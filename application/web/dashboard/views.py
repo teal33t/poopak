@@ -3,18 +3,42 @@ from flask import request, redirect, url_for, flash, render_template
 from flask_login import login_required
 from pymongo import DESCENDING
 from web import client
-from web import q
+# from web import q
 from web import run_crawler
+
+
 from web.config import *
 from web.filters import *
 from web.helper import extract_onions
 from web.search.forms import SearchForm
 from web.stats import onion_stats as oss
 from web.paginate import Pagination
+from web.scanner import subjects
+
+from web.queues import detector_q, crawler_q
+
 from werkzeug.utils import secure_filename
-from time import sleep
 from . import dashboardbp
 from .forms import *
+
+from bson import ObjectId
+
+
+@dashboardbp.route('/hs/<id>', methods=["GET"])
+def hs_view(id=1):
+    search_form = SearchForm()
+    try:
+        child_data = []
+        result = client.crawler.documents.find_one({"_id":ObjectId(id)})
+        if result['links']:
+            for item in result['links']:
+                child_data.append(client.crawler.documents.find_one({"url":item['url']}))
+    except:
+        print ("ERROR")
+    return render_template('dashboard/hs.html',
+                           item=result,
+                           child_data=child_data,
+                           search_form=search_form)
 
 
 @dashboardbp.route('/hs_directory/', methods=["GET"])
@@ -24,10 +48,10 @@ def hs_directory(page_number=1):
     try:
         all_count = client.crawler.documents.find({'status':200}).count()
         pagination = Pagination(page_number, n_per_page, all_count)
-        all = client.crawler.documents.find({'status':200}).sort("seen_time", DESCENDING).skip(
+        all = client.crawler.documents.find({ "$and":[{'status':200}, {"in_scope": {"$eq": False}}]}).sort("seen_time", DESCENDING).skip(
             (page_number - 1) * n_per_page).limit(n_per_page)
     except:
-        print ("ERROR[?]")
+        print ("ERROR")
         return render_template('dashboard/hs_directory.html',
                                search_form=search_form,
                                all_count=0)
@@ -37,6 +61,22 @@ def hs_directory(page_number=1):
                            pagination=pagination,
                            search_form=search_form,
                            all_count=all_count)
+
+
+
+@dashboardbp.route('/hs/detect/<id>', methods=['GET', 'POST'])
+@login_required
+def detect_subjects(id):
+    # if (id):
+    detector_q.enqueue_call(subjects._text_subject, args=(id,), ttl=86400, result_ttl=1)
+
+    flash("Detecting started.", "success")
+    # q.enqueue_call(get_text_subject, args=(id,), ttl=86400, result_ttl=1)
+    return redirect(url_for('dashboard.hs_view', id=id))
+    # else:
+    #     flash("Detector server is down.", "danger")
+        # q.enqueue_call(get_text_subject, args=(id,), ttl=86400, result_ttl=1)
+        # return redirect(url_for('dashboard.hs_view', id=id))
 
 
 @dashboardbp.route('/statistics', methods=['GET', 'POST'])
@@ -79,7 +119,7 @@ def upload_seed():
 
         for seed in seeds:
             print(seed)
-            q.enqueue_call(func=run_crawler, args=(seed,), ttl=86400, result_ttl=1)
+            crawler_q.enqueue_call(func=run_crawler, args=(seed,), ttl=86400, result_ttl=1)
             # sleep(0.1) #delay between jobs
             # print (job.result)
 

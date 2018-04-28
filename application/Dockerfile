@@ -1,8 +1,8 @@
 FROM python:3.6.1
 
-COPY . /app
-ENV HOME=/app
-WORKDIR /app
+COPY . /application
+ENV HOME=/application
+WORKDIR /application
 
 RUN pip install -r requirements.txt
 

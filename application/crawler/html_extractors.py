@@ -16,18 +16,20 @@ class Extractor:
         for link in self.soup.find_all('a'):
             href = link.get('href')
             parsed_href = urlparse(href)
+            in_scope = False
+            is_onion =  True if '.onion' in parsed_href.netloc else False
 
             if parsed_href.netloc != "":
                 href = urlunparse((parsed_href.scheme, parsed_href.netloc, parsed_href.path, '', parsed_href.query, ''))
             if parsed_href.netloc != "":
                 if parsed_href.netloc == parsed_url.netloc:
+                    in_scope = True
                     href = urlunparse((parsed_url.scheme, parsed_url.netloc, parsed_href.path, '', parsed_href.query, ''))
             if href.startswith('/') or href.startswith('?'):
+                in_scope = True
                 href = urlunparse((parsed_url.scheme, parsed_url.netloc, parsed_href.path, '', parsed_href.query, ''))
-            # else:
-            #     href = urlunparse((parsed_url.scheme, parsed_url.netloc, parsed_href.path, '', parsed_href.query, ''))
-            is_onion =  True if '.onion' in parsed_href.netloc else False
-            in_scope = True if parsed_href.netloc == parsed_url.netloc else False
+            if href.startswith("#"):
+                href = urlunparse((parsed_url.scheme, parsed_url.netloc, parsed_href.path, '', parsed_href.query, ''))
             _urls.append({'url': href, 'is_onion': is_onion, 'in_scope': in_scope})
         return _urls
 

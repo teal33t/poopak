@@ -4,10 +4,12 @@ if localhost:
 	mongodb_uri = "mongodb://%s:%s@localhost:27017/crawler" % ("admin", "123qwe")
 	tor_pool_url = "localhost"
 	tor_pool_port = 9150
+	redis_uri = 'redis://localhost:6379'
 else:
 	mongodb_uri = "mongodb://%s:%s@mongodb:27017/crawler" % ("admin", "123qwe")
 	tor_pool_url = "torpool"
 	tor_pool_port = 5566
+	redis_uri = 'redis://redis:6379'
 
 splash_host = "splash"
 splash_port = 8050
@@ -17,7 +19,7 @@ REQUEST_TIMEOUT = 5
 CONNECTION_TIMEOUT = 25
 FOLLOWLOCATION = True
 
-SCR_PATH = "/app/files/screenshots/"
+SCR_PATH = "/application/files/screenshots/"
 
 
 http_codes = {

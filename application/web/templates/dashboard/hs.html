@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block body %}
+
+{% include 'dashboard/nav.html' %}
+
+
+<div class="container" style="margin-top: 5%;">
+    <div class="col-md-12 row">
+
+        <div class="col-lg-6">
+                    <a href="{{ url_for('screenshots_path', filename=item.capture_id)}}" target="_blank">
+                        <img src="{{ url_for('screenshots_path', filename=item.capture_id)}}" class="col-md-12" style="margin: 10px;">
+                    </a>
+        </div>
+        <div class="col-lg-6">
+
+
+            <a href="{{url_for('dashboard.detect_subjects', id=item._id)}}">Detect Subjects</a>
+
+            {{item.subjects}}
+
+            <br/>
+            <hr/>
+
+            <table class="table">
+            <tr>
+                <td colspan="2"><b>Title</b></td>
+                <td colspan="2" width="80%"> {{item.title}}</td>
+            </tr>
+            <tr>
+                <td colspan="2"><b>URL</b></td>
+                <td colspan="2" width="80%"> {{item.url}}</td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Status:</b>
+                </td>
+                <td>
+                    {{item.status}}
+                </td>
+                <td>
+                    <b>Last seen time:</b>
+                </td>
+                <td>
+                    {{item.seen_time | datetimeformat}}
+                </td>
+            </tr>
+                <tr>
+                    <td colspan="2">
+                        <b>Parent</b>
+                    </td>
+                    <td colspan="2">
+                        {% if item.parent == None %}
+                            <i class="glyphicon glyphicon-star"></i>
+                        {% else %}
+                            <a class="btn badge badge-info" href="{{url_for('dashboard.hs_view', id=item.parent) }}" target="_blank">{{item.parent}}</a>
+                        {% endif %}
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <b>Body:</b>
+            <br/>
+            <textarea style="width: 100%; min-height: 100px;">
+                {{item.body}}
+            </textarea>
+        <hr/>
+            <b>HTML</b>
+            <br/>
+            <textarea style="width: 100%; min-height: 100px;">
+                {{item.html}}
+            </textarea>
+        <hr/>
+
+            {% if item.links: %}
+                <h5>Extract Links</h5>
+                <table class="table">
+                    <tr>
+                        <td width="30%">
+                            <b>Hidden services</b>
+                            <hr/>
+                            <ul>
+                                {% for select in item.links: %}
+                                        {% if select.is_onion == True %}
+                                            <li>{{select.url}}
+                                                <span class="badge badge-success">ONION</span>
+                                            </li>
+                                        {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </td>
+                        <td width="30%">
+                            <b>In-scope links</b>
+                            <hr/>
+                            <ul>
+                                {% for select in item.links: %}
+                                        {% if select.in_scope == True %}
+                                            <li> {{select.url}}
+                                            <span class="badge badge-info">In-scope</span>
+                                            </li>
+                                        {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </td>
+                        <td width="30%">
+                            <b>Clearnet links</b>
+                            <hr/>
+                            <ul>
+                                {% for select in item.links: %}
+                                        {% if select.is_onion != True and select.in_scope != True %}
+                                            <li>
+                                                {{select.url}}
+                                            </li>
+                                        {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

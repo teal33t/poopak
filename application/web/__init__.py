@@ -7,20 +7,20 @@ from web.captchar import SessionCaptcha
 from web.models import User
 
 from crawler import run as run_crawler
-from worker import conn
+
 from .config import redis_uri, mongodb_uri, scr_upload_dir
 
-# import datetime
-# import uuid
+
 
 app = Flask(__name__)
 
 app.config['WTF_CSRF_ENABLED'] = True
+app.config['BOOTSTRAP_SERVE_LOCAL'] = True
 
 app.config['REDIS_URL'] = redis_uri
-app.config['QUEUES'] = 'default'
+app.config['QUEUES'] = 'high'
 
-app.secret_key = "sacredtea"
+app.config['SECRET_KEY'] = "sacredteal33tX#"
 
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['CAPTCHA_ENABLE'] = True
@@ -34,8 +34,6 @@ login_manager.session_protection = "strong"
 login_manager.login_view = 'auth.login'
 login_manager.login_message=""
 
-
-q = Queue(name="high",connection=conn)
 
 csrf = CSRFProtect()
 csrf.init_app(app)
