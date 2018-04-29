@@ -47,6 +47,24 @@ class Extractor:
         except:
             return None
 
+    def get_img_links(self):
+        parsed_url = urlparse(self.base_url)
+        _imgs  = []
+        for link in self.soup.find_all('img'):
+            src = link.get('src')
+            parsed_src = urlparse(src)
+
+            if parsed_src.netloc != "":
+                src = urlunparse((parsed_src.scheme, parsed_src.netloc, parsed_src.path, '', parsed_src.query, ''))
+            if parsed_src.netloc != "":
+                if parsed_src.netloc == parsed_url.netloc:
+                    src = urlunparse((parsed_url.scheme, parsed_url.netloc, parsed_src.path, '', parsed_src.query, ''))
+            if src.startswith('/') or src.startswith('?'):
+                src = urlunparse((parsed_url.scheme, parsed_url.netloc, parsed_src.path, '', parsed_src.query, ''))
+            if src.startswith('data'):
+                src = urlunparse((parsed_url.scheme, parsed_url.netloc, parsed_src.path, '', parsed_src.query, ''))
+            _imgs.append(src)
+        return _imgs
 
     # match email addresses from body
     def get_emails(self):
@@ -68,7 +86,7 @@ class Extractor:
     # match eth addresses from body
     def get_eth_addrs(self):
         try:
-            _find = re.findall('0x[a-fA-F0-9]{40}', self.text)
+            _find = re.findall('0x[a-fA-F0-9]{40}', self.get_body())
             return _find
         except:
             return None
