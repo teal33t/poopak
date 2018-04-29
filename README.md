@@ -11,14 +11,12 @@ project is to have a full featured OSINT application for dark web and TOR resear
 * Screenshot hidden services (using Splash)
 * Extract hidden service subjects (using SpaCy)
 * Multi-level crawling
-* Extract urls, bitcoin addresses, emails, PGP keys and EXIF files.
+* Extract urls, crypto addresses [BTC, Monero, ETH], emails, PGP keys and EXIF meta data.
 * Port scanning
 * Web application foot-printing
 
 ### TODO (on-going)
 - EXIF meta data
-- Bitcoin addresss detection
-- Emails
 - PGP Detection
 - Re-design Panel
 - Port Scanning
