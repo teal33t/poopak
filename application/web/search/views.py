@@ -198,6 +198,7 @@ def faq():
     search_form = SearchForm()
     return render_template('faq.html', search_form = search_form)
 
+
 @searchbp.route('/export_all')
 def export_csv():
     all = client.crawler.documents.find({'status': 200})

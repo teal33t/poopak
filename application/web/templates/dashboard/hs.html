@@ -17,10 +17,19 @@
 
             <a href="{{url_for('dashboard.detect_subjects', id=item._id)}}">Detect Subjects</a>
 
+            <hr/>
             {{item.subjects}}
 
             <br/>
             <hr/>
+
+            <a href="{{url_for('dashboard.detect_exif_data', id=item._id)}}">Extract EXIF Metadata</a>
+
+                        {{item.exif}}
+
+            <br/>
+            <hr/>
+
 
             <table class="table">
             <tr>

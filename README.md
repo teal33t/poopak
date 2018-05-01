@@ -12,12 +12,10 @@ project is to have a full featured OSINT application for dark web and TOR resear
 * Extract hidden service subjects (using SpaCy)
 * Multi-level crawling
 * Extract urls, crypto addresses [BTC, Monero, ETH], emails, PGP keys and EXIF meta data.
-* Port scanning
-* Web application foot-printing
+* Web Application Security Scanning (using Arachni)
 
 ### TODO (on-going)
 - EXIF meta data
-- PGP Detection
-- Re-design Panel
-- Port Scanning
-- Web application foot-printing
+- Arachni Docker 
+- Re-design panel
+- Setup Arachni docker [REST Server]

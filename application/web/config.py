@@ -7,6 +7,27 @@ seed_upload_dir = "/application/files/seeds/"
 scr_upload_dir = "/application/files/screenshots/"
 spacy_server_url = "http://spacy:8000/dep/"
 
+
+EXIF_PATH = "/application/files/exif/"
+
+localhost = False
+
+if localhost:
+	mongodb_uri = "mongodb://%s:%s@localhost:27017/crawler" % ("admin", "123qwe")
+	tor_pool_url = "localhost"
+	tor_pool_port = 9150
+	redis_uri = 'redis://localhost:6379'
+else:
+	mongodb_uri = "mongodb://%s:%s@mongodb:27017/crawler" % ("admin", "123qwe")
+	tor_pool_url = "torpool"
+	tor_pool_port = 5566
+	redis_uri = 'redis://redis:6379'
+
+
+def get_exif_save_path(filename, ext):
+	return "%s%s%s" % (EXIF_PATH, filename, ext)
+
+
 SPACY_TAG_MAP = {
     ".", #        {POS: PUNCT, "PunctType", # "peri"},
     ",", #        {POS: PUNCT, "PunctType", # "comm"},
@@ -66,3 +87,5 @@ SPACY_TAG_MAP = {
     "HVS",
     "_SP",
 }
+
+

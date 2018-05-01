@@ -69,7 +69,13 @@ class Spider:
                              'html': self.response['html'],
                              'body': body,
                              'title': data.get_title(),
+                             'emails': data.get_emails(),
                              'links': data.get_links(),
+                             'images': data.get_img_links(),
+                             'addresses': {
+                                 'btc': data.get_bitcoin_addrs(),
+                                 'monero': data.get_monero_addrs(),
+                                 'eth': data.get_eth_addrs()},
                              'seen_time': self.response['seen_time'],
                              }
 

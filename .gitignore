@@ -9,3 +9,4 @@ mongodb
 __pycache__
 application/files/screenshots/*.png
 application/files/seeds/*.*
+application/files/exif/*.*

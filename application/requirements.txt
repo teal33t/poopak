@@ -26,3 +26,4 @@ bs4
 homura
 gunicorn
 requests
+exifread

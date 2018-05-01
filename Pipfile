@@ -35,6 +35,7 @@ pycurl = "*"
 homura = "*"
 numpy = "*"
 requests = "*"
+exifread = "*"
 
 
 [dev-packages]

@@ -3,7 +3,6 @@ from urllib.parse import urlparse, urlunparse
 
 import re
 
-
 class Extractor:
 
     def __init__(self, base_url, html):
@@ -35,6 +34,8 @@ class Extractor:
             _urls.append({'url': href, 'is_onion': is_onion, 'in_scope': in_scope})
         return _urls
 
+
+
     def get_body(self):
         try:
             return self.soup.body.get_text(" ",strip=True)
@@ -61,8 +62,6 @@ class Extractor:
                     src = urlunparse((parsed_url.scheme, parsed_url.netloc, parsed_src.path, '', parsed_src.query, ''))
             if src.startswith('/') or src.startswith('?'):
                 src = urlunparse((parsed_url.scheme, parsed_url.netloc, parsed_src.path, '', parsed_src.query, ''))
-            if src.startswith('data'):
-                src = urlunparse((parsed_url.scheme, parsed_url.netloc, parsed_src.path, '', parsed_src.query, ''))
             _imgs.append(src)
         return _imgs
 
@@ -74,6 +73,13 @@ class Extractor:
         except:
             return None
 
+
+    def get_pgps(self):
+        try:
+            match = re.findall(r'-----BEGIN PGP PUBLIC KEY BLOCK-----((?s).*)-----END PGP PUBLIC KEY BLOCK-----', self.html)
+            return match
+        except:
+            return None
 
     # match bitcoin addresses from body
     def get_bitcoin_addrs(self):

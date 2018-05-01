@@ -6,6 +6,7 @@ from web import client
 # from web import q
 from web import run_crawler
 
+from web.scanner.exif_data import detect_exif_metadata
 
 from web.config import *
 from web.filters import *
@@ -13,7 +14,7 @@ from web.helper import extract_onions
 from web.search.forms import SearchForm
 from web.stats import onion_stats as oss
 from web.paginate import Pagination
-from web.scanner import subjects
+from web.scanner import text_subjects, exif_data
 
 from web.queues import detector_q, crawler_q
 
@@ -63,12 +64,20 @@ def hs_directory(page_number=1):
                            all_count=all_count)
 
 
+@dashboardbp.route('/hs/detect_exif/<id>', methods=['GET', 'POST'])
+@login_required
+def detect_exif_data(id):
+    if detect_exif_metadata(id):
+        flash("EXIF detection started.")
+        return redirect(url_for('dashboard.hs_view', id=id))
+    return redirect(url_for('dashboard.hs_view', id=id))
 
-@dashboardbp.route('/hs/detect/<id>', methods=['GET', 'POST'])
+
+@dashboardbp.route('/hs/detect_subject/<id>', methods=['GET', 'POST'])
 @login_required
 def detect_subjects(id):
     # if (id):
-    detector_q.enqueue_call(subjects._text_subject, args=(id,), ttl=86400, result_ttl=1)
+    detector_q.enqueue_call(text_subjects._text_subject, args=(id,), ttl=86400, result_ttl=1)
 
     flash("Detecting started.", "success")
     # q.enqueue_call(get_text_subject, args=(id,), ttl=86400, result_ttl=1)
