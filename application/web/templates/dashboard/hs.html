@@ -5,7 +5,7 @@
 
 
 <div class="container" style="margin-top: 5%;">
-    <div class="col-md-12 row">
+    <div>
 
         <div class="col-lg-6">
                     <a href="{{ url_for('screenshots_path', filename=item.capture_id)}}" target="_blank">
@@ -15,10 +15,12 @@
         <div class="col-lg-6">
 
 
-            <a href="{{url_for('dashboard.detect_subjects', id=item._id)}}">Detect Subjects</a>
+            <a href="{{url_for('dashboard.detect_subjects', id=item._id)}}" class="btn btn-primary">Detect Subjects</a>
 
             <hr/>
-            {{item.subjects}}
+            {% for item in item.subjects %}
+                <a href="" class="btn badge badge-info">{{item}}</a>,
+            {% endfor %}
 
             <br/>
             <hr/>
