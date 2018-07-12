@@ -16,8 +16,11 @@
 
 
             <a href="{{url_for('dashboard.detect_subjects', id=item._id)}}" class="btn btn-primary">Detect Subjects</a>
+            <a href="{{url_for('dashboard.detect_exif_data', id=item._id)}}">Extract EXIF Metadata</a>
+            <a href="{{url_for('dashboard.detect_exif_data', id=item._id)}}">Export report</a>
 
             <hr/>
+            Subjects: <br/>
             {% for item in item.subjects %}
                 <a href="" class="btn badge badge-info">{{item}}</a>,
             {% endfor %}
@@ -25,7 +28,6 @@
             <br/>
             <hr/>
 
-            <a href="{{url_for('dashboard.detect_exif_data', id=item._id)}}">Extract EXIF Metadata</a>
 
                         {{item.exif}}
 

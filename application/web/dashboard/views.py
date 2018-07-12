@@ -76,16 +76,9 @@ def detect_exif_data(id):
 @dashboardbp.route('/hs/detect_subject/<id>', methods=['GET', 'POST'])
 @login_required
 def detect_subjects(id):
-    # if (id):
     detector_q.enqueue_call(text_subjects._text_subject, args=(id,), ttl=86400, result_ttl=1)
-
     flash("Detecting started.", "success")
-    # q.enqueue_call(get_text_subject, args=(id,), ttl=86400, result_ttl=1)
     return redirect(url_for('dashboard.hs_view', id=id))
-    # else:
-    #     flash("Detector server is down.", "danger")
-        # q.enqueue_call(get_text_subject, args=(id,), ttl=86400, result_ttl=1)
-        # return redirect(url_for('dashboard.hs_view', id=id))
 
 
 @dashboardbp.route('/statistics', methods=['GET', 'POST'])

@@ -6,15 +6,15 @@
 This is an application for crawling, scanning and data gathering of TOR hidden services, The concept through this 
 project is to have a full featured OSINT application for dark web and TOR researchers.
 
-### Feaatures
+## Features
 * Multi-level Crawl over tor through a seed file
 * Screenshot hidden services (using Splash)
 * Extract hidden service subjects (using SpaCy)
-* Extract urls, crypto addresses [BTC, Monero, ETH], emails, PGP keys and EXIF meta data.
-* Web Application Security Scanning (using Arachni)
-# Export reports and statics
+* Extract urls, crypto addresses [BTC, Monero, ETH], emails, PGP keys and EXIF meta data. [DOING]
+* Web Application Security Scanning (using Arachni) [DOING]
+* Export reports and statics
 
-### TODO (on-going)
+## TODO (on-going)
 - EXIF meta data
 - Arachni Docker 
 - Re-design panel
