@@ -1,23 +1,40 @@
 # POOPAK | TOR Hidden Service Crawler
-- OSINT Tool
-- Search Engine
-- Docker based
+ [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](https://github.com/ellerbrock/open-source-badges/) [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/) [![Generic badge](https://img.shields.io/badge/Tor-Hidden%20Services-green.svg)](https://torproject.org/) [![Twitter Follow](https://img.shields.io/twitter/follow/espadrine.svg?style=social&label=Follow)](http://twitter.com/sparkmood)
 
-This is an application for crawling, scanning and data gathering of TOR hidden services, The concept through this 
-project is to have a full featured OSINT application for dark web and TOR researchers.
+[![Screenshot](https://raw.githubusercontent.com/thelematic/poopak/master/screenshots.jpg)](http://twitter.com/sparkmood)
+
+
+This is an experimental application for crawling, scanning and data gathering from TOR hidden services.
 
 ## Features
-* Multi-level Crawl over tor through a seed file
-* Screenshot hidden services (using Splash)
-* Extract hidden service subjects (using SpaCy)
-* Extract urls, crypto addresses [BTC, Monero, ETH], emails, PGP keys and EXIF meta data. [DOING]
-* Web Application Security Scanning (using Arachni) [DOING]
-* Export reports and statics
+* Multi-level in-depth crawling using CURL
+* Link extractor
+* Extract Emails/BTC/ETH/XMR addresses
+* Extract EXIF meta data
+* Screenshot (using Splash)
+* Subject detector (using Spacy)
+* Port Scanner
+* Extract report from a hidden service (CSV/PDF)
+* Fulltext search through the directory
+* Language detection
+* Web application security scanning (using Arachni)
+* Docker based and Web UI 
 
-## TODO (on-going)
-- EXIF meta data
-- Arachni Docker 
-- Re-design panel
-- Export reports
-- Setup Arachni docker [REST Server]
-- I2P Support
+## Licence
+This software is made available under the GPL v.3 license. It means if you run a modified program on a server and let other users communicate with it there, your server must also allow them to download the source code corresponding to the modified version running there.
+
+
+## Dependencies 
+
+-   Docker (tested on Docker version 18.03.1)
+-   Docker Compose (tested on version 1.21.1)
+-   Python 3
+-   pipenv
+
+## Install
+Just run application with docker-compose:
+
+    docker-compose up -d
+and next forward your browser to [localhost](http://localhost/).
+
+[UNDER MAINTENANCE]

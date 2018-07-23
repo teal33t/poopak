@@ -3,10 +3,13 @@ version: '3'
 # NGINX 
 # FLASK
 # MONGODB
+# MONGO-ADMINPANEL
 # REDIS
-# REDIS WORKER
+# WORKERS
 # TOR + HA PROXY
 # [-] MONGOCLIENT
+# SPLASH
+# SPACY
 
 networks:
   app-tier:
@@ -68,6 +71,7 @@ services:
     networks:
       - app-tier
 
+  #screenshot
   splash:
     image: scrapinghub/splash
     restart: always
@@ -77,6 +81,7 @@ services:
       - 5023:8050
 
 
+  #subject detector
   spacy:
     image: jgontrum/spacyapi
     restart: always
