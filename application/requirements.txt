@@ -25,5 +25,5 @@ pycurl
 bs4
 homura
 gunicorn
-requests
+requests=">=2.20.0"
 exifread
