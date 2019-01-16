@@ -17,7 +17,7 @@ This is an experimental application for crawling, scanning and data gathering fr
 * Extract report from a hidden service (CSV/PDF)
 * Fulltext search through the directory
 * Language detection
-* Web application security scanning (using Arachni)
+* Web application security scanning (using Arachni) - [Under Developing]
 * Docker based and Web UI 
 
 ## Licence
@@ -36,3 +36,4 @@ Just run application with docker-compose:
 
     docker-compose up -d
 and next point your browser to [localhost](http://localhost/). 
+ 
