@@ -1,6 +1,7 @@
 # POOPAK | TOR Hidden Service Crawler
  [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](https://github.com/ellerbrock/open-source-badges/) [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/) [![Generic badge](https://img.shields.io/badge/Tor-Hidden%20Services-green.svg)](https://torproject.org/) 
- 
+
+New project initiated, please follow [Poopakv2](https://github.com/teal33t/poopakv2) 
 
 [![Screenshot](https://raw.githubusercontent.com/thelematic/poopak/master/screenshots.jpg)](http://twitter.com/sparkmood)
 
