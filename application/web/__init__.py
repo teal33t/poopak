@@ -3,10 +3,10 @@ import flask_login
 from flask_wtf.csrf import CSRFProtect
 from pymongo import MongoClient
 from rq import Queue
-from web.captchar import SessionCaptcha
-from web.models import User
+from .captchar import SessionCaptcha
+from .models import User
 
-from crawler import run as run_crawler
+from ..crawler import run as run_crawler
 
 from .config import redis_uri, mongodb_uri, scr_upload_dir
 
@@ -45,14 +45,14 @@ client = MongoClient(mongodb_uri)
 from werkzeug.security import generate_password_hash
 from pymongo.errors import DuplicateKeyError
 
-pass_hash = generate_password_hash("123qweasdzxc", method='pbkdf2:sha256')
-print (pass_hash)
-# Insert the user in the DB
-try:
-    client.crawler.users.insert({"_id": "admin", "password": pass_hash})
-    print("User created.")
-except DuplicateKeyError:
-    print("User already present in DB.")
+# pass_hash = generate_password_hash("123qweasdzxc", method='pbkdf2:sha256')
+# print (pass_hash)
+# # Insert the user in the DB
+# try:
+#     client.crawler.users.insert({"_id": "admin", "password": pass_hash})
+#     print("User created.")
+# except DuplicateKeyError:
+#     print("User already present in DB.")
 
 
 from .filters import *

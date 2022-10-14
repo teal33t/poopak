@@ -27,3 +27,4 @@ homura
 gunicorn
 requests
 exifread
+click

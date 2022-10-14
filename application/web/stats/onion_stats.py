@@ -1,4 +1,4 @@
-from web import client
+from .. import client
 
 
 def get_all_unique_page():

@@ -1,4 +1,4 @@
-FROM python:3.6.1
+FROM python:3.8
 
 COPY . /application
 ENV HOME=/application

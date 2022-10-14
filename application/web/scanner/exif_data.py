@@ -1,10 +1,10 @@
 from homura import download
 from urllib.parse import urlparse, urlunparse
-from web.queues import detector_q
-from web import client
-from crawler.html_extractors import Extractor
+from ..queues import detector_q
+from .. import client
+# from .crawler.html_extractors import Extractor
 from bson import ObjectId
-from web import config
+from .. import config
 
 
 
@@ -36,13 +36,13 @@ def download_and_detect(id, url, filename):
 
 def detect_exif_metadata(id):
 
-    data = client.crawler.documents.find_one({"_id": ObjectId(id)})
-    exta = Extractor(base_url=data['url'], html=data['html'])
-    srcs = exta.get_img_links()
-    for src in srcs:
-        n, ext = splitext(urlparse(src).path)
-        obj_uuid = uuid.uuid4().hex
-        path = config.get_exif_save_path(obj_uuid, ext)
-        detector_q.enqueue_call(download_and_detect, args=(id, src, path), ttl=86400, result_ttl=1)
+    # data = client.crawler.documents.find_one({"_id": ObjectId(id)})
+    # exta = Extractor(base_url=data['url'], html=data['html'])
+    # srcs = exta.get_img_links()
+    # for src in srcs:
+    #     n, ext = splitext(urlparse(src).path)
+    #     obj_uuid = uuid.uuid4().hex
+    #     path = config.get_exif_save_path(obj_uuid, ext)
+    #     detector_q.enqueue_call(download_and_detect, args=(id, src, path), ttl=86400, result_ttl=1)
 
     return True

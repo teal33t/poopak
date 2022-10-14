@@ -15,6 +15,10 @@ networks:
   app-tier:
     driver: bridge
 
+volumes:
+  mongodb_data:
+    driver: local
+
 services:
 
 
@@ -31,18 +35,21 @@ services:
       - app-tier
 
   mongodb:
-    image: 'bitnami/mongodb:latest'
+    image: mongo
     hostname: mongodb
     user: root
+    restart: always
     volumes:
-      - .:/bitnami
+      - 'mongodb_data:/bitnami/mongodb'
     ports:
       - "27017:27017"
     environment:
-        - MONGODB_ROOT_PASSWORD=123qwe
-        - MONGODB_USERNAME=admin
-        - MONGODB_PASSWORD=123qwe
-        - MONGODB_DATABASE=crawler
+      - MONGO_INITDB_ROOT_PASSWORD=123qwe
+      - MONGO_INITDB_ROOT_USERNAME=admin
+        # - MONGODB_ROOT_PASSWORD=123qwe
+        # - MONGODB_USERNAME=admin
+        # - MONGODB_PASSWORD=123qwe
+        # - MONGODB_DATABASE=crawler
     networks:
       - app-tier
 
@@ -96,12 +103,12 @@ services:
     build: ./application
     image: web-app
     container_name: web-app
-#    command: python app.py
-    command: bash -c "/wait && gunicorn manage:app -b :8000 --name app --log-level=debug --log-file=-"
+    command: flask run --host=0.0.0.0 --port=8000
+    # command: bash -c "/wait && gunicorn manage:app -b :8000 --name app --log-level=debug --log-file=-"
     volumes:
        - ./application:/application
-#    ports:
-#      - "5050:5050"
+    # ports:
+    #    - "5050:5050"
     expose:
        - "8000"
     depends_on:
@@ -118,6 +125,7 @@ services:
     environment:
       WAIT_HOSTS: mongodb:27017
       WAIT_BEFORE_HOSTS: 25
+      FLASK_APP: web
 
 
 

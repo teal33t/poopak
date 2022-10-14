@@ -1,9 +1,9 @@
 from flask import render_template, redirect, request, url_for, flash
 from flask_login import login_user, logout_user, current_user
-from web import captcha, client
-from web.models import User
+from .. import captcha, client
+from ..models import User
 
-from web.search.forms import SearchForm
+from ..search.forms import SearchForm
 from . import authbp
 from .forms import *
 

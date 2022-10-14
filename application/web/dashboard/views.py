@@ -2,21 +2,21 @@ import dateutil.parser
 from flask import request, redirect, url_for, flash, render_template
 from flask_login import login_required
 from pymongo import DESCENDING
-from web import client
+from .. import client
 # from web import q
-from web import run_crawler
+from .. import run_crawler
 
-from web.scanner.exif_data import detect_exif_metadata
+from ..scanner.exif_data import detect_exif_metadata
 
-from web.config import *
-from web.filters import *
-from web.helper import extract_onions
-from web.search.forms import SearchForm
-from web.stats import onion_stats as oss
-from web.paginate import Pagination
-from web.scanner import text_subjects, exif_data
+from ..config import *
+from ..filters import *
+from ..helper import extract_onions
+from ..search.forms import SearchForm
+from ..stats import onion_stats as oss
+from ..paginate import Pagination
+from ..scanner import text_subjects, exif_data
 
-from web.queues import detector_q, crawler_q
+from ..queues import detector_q, crawler_q
 
 from werkzeug.utils import secure_filename
 from . import dashboardbp

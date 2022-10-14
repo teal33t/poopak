@@ -1,6 +1,6 @@
 import json
 import requests
-from web.config import spacy_server_url
+from ..config import spacy_server_url
 # from web.config import mongodb_uri
 
 # from web import client

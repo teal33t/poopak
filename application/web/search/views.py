@@ -4,17 +4,17 @@ import re
 from bson.objectid import ObjectId
 from flask import request, redirect, url_for, flash, render_template, Response
 from pymongo import DESCENDING
-from web import captcha
-from web import client
+from .. import captcha
+from .. import client
 
-from web.queues import crawler_q
-from web.config import *
-from web.filters import *
+from ..queues import crawler_q
+from ..config import *
+from ..filters import *
 
-from web import run_crawler
+from .. import run_crawler
 from .forms import SearchForm, AddOnionForm, ReportOnionForm
 
-from web.paginate import Pagination
+from ..paginate import Pagination
 from . import searchbp
 
 import time
