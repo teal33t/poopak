@@ -1,4 +1,4 @@
-- I'm looking for open-source developers together work on PoopakV2. If you are intrested let's talk! -> yolato@protonmail.com
+- I'm looking for open-source developers to together work on PoopakV2. If you are intrested let's talk! -> yolato@protonmail.com
 - This repo Poopak is no longer usable.
 
 # POOPAK | TOR Hidden Service Crawler
