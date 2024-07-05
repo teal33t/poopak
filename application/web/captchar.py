@@ -3,7 +3,9 @@ from random import SystemRandom
 import logging
 
 from captcha.image import ImageCaptcha
-from flask import session, request, Markup
+from flask import session, request
+from markupsafe import Markup
+
 import string, random
 
 class SessionCaptcha(object):
