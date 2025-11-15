@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block body %}
+
+<div class="col-md-12">
+    <div class="error-container" style="text-align: center; padding: 50px 20px;">
+        <h1 style="font-size: 72px; color: #ffc107; margin-bottom: 20px;">403</h1>
+        
+        <h2 style="color: #333; margin-bottom: 20px;">Access Forbidden</h2>
+        
+        <p style="font-size: 18px; color: #666; margin-bottom: 30px;">
+            You don't have permission to access this resource.
+        </p>
+        
+        <div style="margin-top: 30px;">
+            <a href="{{ url_for('search.index') }}" class="btn btn-primary" style="margin-right: 10px;">
+                <span class="glyphicon glyphicon-home"></span> Go to Home
+            </a>
+            
+            {% if not current_user.is_authenticated %}
+            <a href="{{ url_for('auth.login') }}" class="btn btn-success">
+                <span class="glyphicon glyphicon-log-in"></span> Login
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

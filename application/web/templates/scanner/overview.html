@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block body %}
+
+<div class="col-md-12">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for class, message in messages %}
+                <div class="alert alert-{{class}} text-center">
+                    {% if class == 'success' %}
+                        <i class="glyphicon glyphicon-ok"></i>
+                    {% elif class == 'error' %}
+                        <i class="glyphicon glyphicon-exclamation-sign"></i>
+                    {% else %}
+                        <i class="glyphicon glyphicon-info-sign"></i>
+                    {% endif %}
+                    &nbsp;{{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="col-md-12">
+        <h3>
+            <i class="glyphicon glyphicon-screenshot"></i>
+            &nbsp;Scanner Overview
+        </h3>
+        <p class="text-muted">Detect EXIF metadata and extract subjects from crawled documents</p>
+    </div>
+</div>
+
+<div class="col-md-12" style="margin-top: 20px;">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>Detection Operations</h4>
+        </div>
+        <div class="panel-body">
+            <form method="POST" action="{{ url_for('scanner.scanner_overview') }}">
+                <div class="form-group">
+                    <label for="document_id">Document ID</label>
+                    <input type="text" class="form-control" id="document_id" name="document_id" 
+                           placeholder="Enter document ID" required>
+                    <p class="help-block">Enter the ID of the document to scan</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="detection_type">Detection Type</label>
+                    <select class="form-control" id="detection_type" name="detection_type" required>
+                        <option value="">Select detection type...</option>
+                        <option value="exif">EXIF Metadata Detection</option>
+                        <option value="subjects">Subject Extraction (NLP)</option>
+                    </select>
+                    <p class="help-block">
+                        <strong>EXIF:</strong> Extract metadata from images in the document<br>
+                        <strong>Subjects:</strong> Extract named entities from document text using NLP
+                    </p>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="glyphicon glyphicon-play"></i> Start Detection
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12" style="margin-top: 20px;">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>Recent Documents</h4>
+        </div>
+        <div class="panel-body">
+            {% if documents %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>URL</th>
+                            <th>Title</th>
+                            <th>Status</th>
+                            <th>Images</th>
+                            <th>Has Body</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for doc in documents %}
+                        <tr>
+                            <td><code>{{ doc._id }}</code></td>
+                            <td>
+                                <a href="{{ url_for('dashboard.hs_view', id=doc._id) }}">
+                                    {{ doc.url[:50] }}{% if doc.url|length > 50 %}...{% endif %}
+                                </a>
+                            </td>
+                            <td>{{ doc.title[:30] if doc.title else '-' }}{% if doc.title and doc.title|length > 30 %}...{% endif %}</td>
+                            <td>
+                                {% if doc.status == 200 %}
+                                    <span class="label label-success">{{ doc.status }}</span>
+                                {% else %}
+                                    <span class="label label-default">{{ doc.status }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ doc.images|length if doc.images else 0 }}</td>
+                            <td>
+                                {% if doc.body %}
+                                    <i class="glyphicon glyphicon-ok text-success"></i>
+                                {% else %}
+                                    <i class="glyphicon glyphicon-remove text-muted"></i>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="text-muted">No recent documents found</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

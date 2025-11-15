@@ -1,27 +1,44 @@
-from . import app
+"""
+Jinja2 template filters for the web application.
+
+This module provides custom filters for use in Jinja2 templates.
+"""
+
+from datetime import datetime
+from typing import Optional
 
 from pytz import timezone
 
-@app.template_filter('datetimeformat')
-def datetimeformat(value, format='%d-%m-%Y - %H:%M:%S'):
-    if value:
-        value = value.replace(tzinfo=timezone('UTC'))
-        return value.strftime(format)
 
-@app.template_filter('limitbody')
-def limitbody(value, size=700):
+def datetimeformat(value: Optional[datetime], format: str = "%d-%m-%Y - %H:%M:%S") -> Optional[str]:
+    """
+    Format a datetime value as a string.
+
+    Args:
+        value: Datetime value to format
+        format: Format string (default: "%d-%m-%Y - %H:%M:%S")
+
+    Returns:
+        Formatted datetime string or None if value is None
+    """
+    if value:
+        value = value.replace(tzinfo=timezone("UTC"))
+        return value.strftime(format)
+    return None
+
+
+def limitbody(value: Optional[str], size: int = 700) -> Optional[str]:
+    """
+    Limit body text to a specified size.
+
+    Args:
+        value: Text to limit
+        size: Maximum size (default: 700)
+
+    Returns:
+        Truncated text with "..." appended or None if value is None
+    """
     if value:
         body = value.strip()
-        return ("%s..." % body[:size] )
-
-# @app.template_filter('recreate_neturi')
-# def recreate_neturi(base_url, con_url):
-#     if con_url.in_scope == True and con_url.is_onion == True:
-#
-#         return "%s%s" % (base_url, con_url)
-
-
-# @app.template_filter('http_rpr')
-# def http_rpr(code):
-#     if int(code) == 200:
-#         return "<i class='glyphicon glyphicon-ok'></i>"
+        return f"{body[:size]}..."
+    return None

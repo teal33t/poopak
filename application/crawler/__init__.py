@@ -1,13 +1,21 @@
-# from .config_crawler import *
-# from pymongo import MongoClient
-# from .curl import query
-# from  .extractors import proccess_html
-# from web import q
-from .spider import Spider
+"""
+Crawler package for web crawling operations.
+
+This package provides modules for crawling web pages, extracting content,
+and storing results in the database.
+"""
+
+from .spider import crawl_with_depth
+
 
 def run(url):
-    spider = Spider(base_url=url, depth=1)
-    spider.proccess()
+    """
+    Run a simple crawl for a single URL.
+
+    Args:
+        url: URL to crawl
+    """
+    crawl_with_depth(target=url, parent=None, depth=1)
 
     # print (url)
     # client = MongoClient(mongodb_uri)

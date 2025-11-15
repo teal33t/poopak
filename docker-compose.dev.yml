@@ -1,0 +1,376 @@
+version: '3.8'
+
+# Development Docker Compose Configuration
+# Optimized for local development with hot-reload and debugging capabilities
+
+networks:
+  app-tier:
+    driver: bridge
+    name: onion-crawler-dev
+
+volumes:
+  mongodb_data:
+    driver: local
+    name: onion-crawler-mongodb-dev
+  elasticsearch_data:
+    driver: local
+    name: onion-crawler-elasticsearch-dev
+  redis_data:
+    driver: local
+    name: onion-crawler-redis-dev
+
+services:
+  # Data Bus - Redis
+  redis:
+    image: bitnami/redis:7.2
+    container_name: onion-redis-dev
+    hostname: redis
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    volumes:
+      - redis_data:/bitnami/redis/data
+    networks:
+      - app-tier
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # Database - MongoDB
+  mongodb:
+    image: mongo:7.0
+    container_name: onion-mongodb-dev
+    hostname: mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=123qwe
+      - MONGO_INITDB_DATABASE=crawler
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_data:/data/configdb
+    networks:
+      - app-tier
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  # Search Engine - Elasticsearch
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: onion-elasticsearch-dev
+    hostname: elasticsearch
+    restart: unless-stopped
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - node.name=elasticsearch
+      - cluster.name=onion-crawler-cluster
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - xpack.security.enrollment.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - bootstrap.memory_lock=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - app-tier
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=5s || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # Tor Proxy Pool
+  torpool:
+    image: zeta0/alpine-tor:latest
+    container_name: onion-torpool-dev
+    hostname: torpool
+    restart: unless-stopped
+    ports:
+      - "5566:5566"
+      - "2090:2090"
+    environment:
+      - tors=5
+    networks:
+      - app-tier
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:2090 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # Screenshot Service - Splash
+  splash:
+    image: scrapinghub/splash:latest
+    container_name: onion-splash-dev
+    hostname: splash
+    restart: unless-stopped
+    ports:
+      - "5023:8050"
+    networks:
+      - app-tier
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8050/_ping || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  # NLP Service - SpaCy
+  spacy:
+    image: jgontrum/spacyapi:latest
+    container_name: onion-spacy-dev
+    hostname: spacy
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    networks:
+      - app-tier
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:80/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  # Web Application
+  web-app:
+    build:
+      context: ./application
+      dockerfile: Dockerfile
+      target: development
+    image: onion-web-app:dev
+    container_name: onion-web-app-dev
+    hostname: web-app
+    restart: unless-stopped
+    command: flask run --host=0.0.0.0 --port=8000 --reload
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./application:/application
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - app-tier
+    environment:
+      - FLASK_APP=web
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+      - WAIT_HOSTS=mongodb:27017,redis:6379,elasticsearch:9200
+      - WAIT_HOSTS_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=5
+      - WAIT_BEFORE_HOSTS=25
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Nginx Web Server
+  server:
+    image: nginx:alpine
+    container_name: onion-nginx-dev
+    hostname: server
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./web-server/conf.d:/etc/nginx/conf.d:ro
+      - ./application/web/static:/application/static:ro
+    depends_on:
+      web-app:
+        condition: service_healthy
+    networks:
+      - app-tier
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:80/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  # Crawler Worker
+  crawler-worker:
+    build:
+      context: ./application
+      dockerfile: Dockerfile
+      target: development
+    image: onion-web-app:dev
+    container_name: onion-crawler-worker-dev
+    hostname: crawler-worker
+    restart: unless-stopped
+    command: bash -c "/wait && python manage.py run_crawler_worker"
+    volumes:
+      - ./application:/application
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - app-tier
+    environment:
+      - WAIT_HOSTS=redis:6379,mongodb:27017,elasticsearch:9200
+      - WAIT_HOSTS_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=5
+      - WAIT_BEFORE_HOSTS=5
+    healthcheck:
+      test: ["CMD-SHELL", "ps aux | grep '[p]ython manage.py run_crawler_worker' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Detector Worker
+  detector-worker:
+    build:
+      context: ./application
+      dockerfile: Dockerfile
+      target: development
+    image: onion-web-app:dev
+    container_name: onion-detector-worker-dev
+    hostname: detector-worker
+    restart: unless-stopped
+    command: bash -c "/wait && python manage.py run_detector_worker"
+    volumes:
+      - ./application:/application
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - app-tier
+    environment:
+      - WAIT_HOSTS=redis:6379,mongodb:27017,elasticsearch:9200
+      - WAIT_HOSTS_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=5
+      - WAIT_BEFORE_HOSTS=5
+    healthcheck:
+      test: ["CMD-SHELL", "ps aux | grep '[p]ython manage.py run_detector_worker' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # App Worker
+  app-worker:
+    build:
+      context: ./application
+      dockerfile: Dockerfile
+      target: development
+    image: onion-web-app:dev
+    container_name: onion-app-worker-dev
+    hostname: app-worker
+    restart: unless-stopped
+    command: bash -c "/wait && python manage.py run_app_worker"
+    volumes:
+      - ./application:/application
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - app-tier
+    environment:
+      - WAIT_HOSTS=redis:6379,mongodb:27017,elasticsearch:9200
+      - WAIT_HOSTS_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=5
+      - WAIT_BEFORE_HOSTS=5
+    healthcheck:
+      test: ["CMD-SHELL", "ps aux | grep '[p]ython manage.py run_app_worker' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Panel Worker
+  panel-worker:
+    build:
+      context: ./application
+      dockerfile: Dockerfile
+      target: development
+    image: onion-web-app:dev
+    container_name: onion-panel-worker-dev
+    hostname: panel-worker
+    restart: unless-stopped
+    command: bash -c "/wait && python manage.py run_panel_worker"
+    volumes:
+      - ./application:/application
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - app-tier
+    environment:
+      - WAIT_HOSTS=redis:6379,mongodb:27017,elasticsearch:9200
+      - WAIT_HOSTS_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=5
+      - WAIT_BEFORE_HOSTS=5
+    healthcheck:
+      test: ["CMD-SHELL", "ps aux | grep '[p]ython manage.py run_panel_worker' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # MongoDB Admin Panel
+  mongoclient:
+    image: mongoclient/mongoclient:latest
+    container_name: onion-mongoclient-dev
+    hostname: mongoclient
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - app-tier
+    environment:
+      - MONGO_URL=mongodb://admin:123qwe@mongodb:27017
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s

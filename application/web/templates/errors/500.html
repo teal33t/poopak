@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block body %}
+
+<div class="col-md-12">
+    <div class="error-container" style="text-align: center; padding: 50px 20px;">
+        <h1 style="font-size: 72px; color: #dc3545; margin-bottom: 20px;">500</h1>
+        
+        <h2 style="color: #333; margin-bottom: 20px;">Internal Server Error</h2>
+        
+        <p style="font-size: 18px; color: #666; margin-bottom: 30px;">
+            Something went wrong on our end. We're working to fix it.
+        </p>
+        
+        <div style="margin-top: 30px;">
+            <a href="{{ url_for('search.index') }}" class="btn btn-primary" style="margin-right: 10px;">
+                <span class="glyphicon glyphicon-home"></span> Go to Home
+            </a>
+            
+            <button onclick="location.reload()" class="btn btn-default">
+                <span class="glyphicon glyphicon-refresh"></span> Refresh Page
+            </button>
+        </div>
+        
+        <div style="margin-top: 40px; padding: 20px; background-color: #f8f9fa; border-radius: 5px; text-align: left; max-width: 600px; margin-left: auto; margin-right: auto;">
+            <h4 style="color: #333; margin-bottom: 10px;">What can you do?</h4>
+            <ul style="color: #666; line-height: 1.8;">
+                <li>Try refreshing the page</li>
+                <li>Go back to the previous page</li>
+                <li>Return to the home page</li>
+                <li>If the problem persists, please contact support</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -28,3 +28,4 @@ gunicorn
 requests
 exifread
 click
+elasticsearch>=8.0.0,<9.0.0

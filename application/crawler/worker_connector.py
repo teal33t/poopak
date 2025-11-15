@@ -1,6 +1,12 @@
-from redis import Redis
-from urllib.parse import urlparse
-from .config_crawler import redis_uri
+"""
+Worker connector module for crawler.
 
-url = urlparse(redis_uri)
-redis_connection = Redis(host=url.hostname, port=url.port, db=3)  # db 3 is for crawler worker
+This module provides a pre-configured Redis connection for the crawler worker.
+"""
+
+from redis import Redis
+
+from application.config import settings
+
+# Create Redis connection for crawler worker
+redis_connection: Redis = Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB_CRAWLER)

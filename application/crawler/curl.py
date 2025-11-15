@@ -1,24 +1,64 @@
-import io
-import pycurl
+"""
+HTTP request module using pycurl.
+
+This module provides functions for making HTTP requests through Tor proxy
+using pycurl library for web crawling operations.
+"""
+
 import datetime
+import io
+import logging
+from typing import Any, Dict, List
+
+import pycurl
+
+from application.config.constants import DEFAULT_USER_AGENT, HTTP_OK, HTTP_SERVICE_UNAVAILABLE, MAX_RETRY_SENTINEL
+
 from .config_crawler import *
 
-def get_headers():
-  ua = "Mozilla/5.0 (Windows NT 6.1; rv:45.0) Gecko/20100101 Firefox/45.0"
-  headers = [
-    "Connection: close",
-    "User-Agent: %s"%ua
-  ]
-  return headers
+logger = logging.getLogger(__name__)
 
-def query(url):
+
+def get_headers() -> List[str]:
+    """
+    Get HTTP headers for requests.
+
+    Returns:
+        List of HTTP header strings including User-Agent and Connection headers
+    """
+    headers = ["Connection: close", "User-Agent: %s" % DEFAULT_USER_AGENT]
+    return headers
+
+
+def query(url: str) -> Dict[str, Any]:
+    """
+    Fetch a URL through Tor proxy using pycurl.
+
+    Makes HTTP request to the specified URL through Tor SOCKS5 proxy with
+    retry logic. Returns response data including HTML content and status code.
+
+    Args:
+        url: The URL to fetch
+
+    Returns:
+        Dictionary containing:
+            - url: The requested URL
+            - html: HTML content (only for 200 responses)
+            - status: HTTP status code
+            - seen_time: Timestamp when the request was made
+
+    Note:
+        Retries up to max_try_count times on pycurl errors.
+        Returns status 503 if all retries fail.
+    """
 
     output = io.BytesIO()
     seen_time = datetime.datetime.utcnow()
 
     try_count = 0
     resp = None
-    while try_count < max_try_count :
+
+    while try_count < max_try_count:
         try:
             query = pycurl.Curl()
             query.setopt(pycurl.URL, url)
@@ -34,28 +74,34 @@ def query(url):
 
             http_code = query.getinfo(pycurl.HTTP_CODE)
             response = output.getvalue()
-            html = response.decode('utf8')
+            html = response.decode("utf8")
 
             if http_code in http_codes:
-                if http_code == 200:
-                    resp = {"url": url,
-                            "html": html,
-                            "status": http_code,
-                            "seen_time": seen_time}
-                    try_count = 9999
+                if http_code == HTTP_OK:
+                    resp = {"url": url, "html": html, "status": http_code, "seen_time": seen_time}
+                    logger.info(f"Successfully fetched {url} with status {http_code}")
+                    try_count = MAX_RETRY_SENTINEL
                 else:
-                    resp = {"url": url,
-                            "status": http_code,
-                            "seen_time": seen_time}
-                    try_count = 9999
+                    resp = {"url": url, "status": http_code, "seen_time": seen_time}
+                    logger.info(f"Fetched {url} with status {http_code}")
+                    try_count = MAX_RETRY_SENTINEL
 
-        except pycurl.error:
+        except pycurl.error as e:
             try_count = try_count + 1
-            resp = {"url": url,
-                    "status": 503, # Not server exist
-                    "seen_time": seen_time}
+            logger.warning(f"pycurl error fetching {url} (attempt {try_count}/{max_try_count}): {str(e)}")
+            resp = {"url": url, "status": HTTP_SERVICE_UNAVAILABLE, "seen_time": seen_time}
+
+        except UnicodeDecodeError as e:
+            logger.error(f"Unicode decode error for {url}: {str(e)}")
+            resp = {"url": url, "status": HTTP_SERVICE_UNAVAILABLE, "seen_time": seen_time}
+            try_count = MAX_RETRY_SENTINEL
+
+        except Exception as e:
+            logger.error(f"Unexpected error fetching {url}: {str(e)}")
+            try_count = try_count + 1
+            resp = {"url": url, "status": HTTP_SERVICE_UNAVAILABLE, "seen_time": seen_time}
+
+    if try_count >= max_try_count and resp:
+        logger.error(f"Failed to fetch {url} after {max_try_count} attempts")
 
     return resp
-
-
-

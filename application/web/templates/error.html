@@ -1,14 +1,42 @@
 {% extends "base.html" %}
 {% block body %}
 
-
-    <div class="col-md-12">
-
-    <h3>ERROR</h3>
-        <p>
-             {{description}}
+<div class="col-md-12">
+    <div class="error-container" style="text-align: center; padding: 50px 20px;">
+        {% if code %}
+        <h1 style="font-size: 72px; color: #dc3545; margin-bottom: 20px;">{{ code }}</h1>
+        {% endif %}
+        
+        <h2 style="color: #333; margin-bottom: 20px;">{{ title or "Error" }}</h2>
+        
+        <p style="font-size: 18px; color: #666; margin-bottom: 30px;">
+            {{ description }}
         </p>
-
+        
+        <div style="margin-top: 30px;">
+            <a href="{{ url_for('search.index') }}" class="btn btn-primary" style="margin-right: 10px;">
+                <span class="glyphicon glyphicon-home"></span> Go to Home
+            </a>
+            
+            {% if request.referrer and request.referrer != request.url %}
+            <a href="{{ request.referrer }}" class="btn btn-default">
+                <span class="glyphicon glyphicon-arrow-left"></span> Go Back
+            </a>
+            {% endif %}
+        </div>
+        
+        {% if code == '500' or code == 500 %}
+        <div style="margin-top: 40px; padding: 20px; background-color: #f8f9fa; border-radius: 5px; text-align: left; max-width: 600px; margin-left: auto; margin-right: auto;">
+            <h4 style="color: #333; margin-bottom: 10px;">What can you do?</h4>
+            <ul style="color: #666; line-height: 1.8;">
+                <li>Try refreshing the page</li>
+                <li>Go back to the previous page</li>
+                <li>Return to the home page</li>
+                <li>If the problem persists, please contact support</li>
+            </ul>
+        </div>
+        {% endif %}
     </div>
+</div>
 
 {% endblock %}

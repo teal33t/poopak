@@ -6,6 +6,9 @@
       <h5 class="text-center">
 
         Total found {{all_count}}
+        {% if search_method %}
+        <small class="text-muted" style="font-size: 0.7em;">(via {{search_method}})</small>
+        {% endif %}
       </h5>
         <br/>
         {%if results %}

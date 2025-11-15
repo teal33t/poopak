@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block body %}
+
+<div class="col-md-12">
+    <div class="error-container" style="text-align: center; padding: 50px 20px;">
+        <h1 style="font-size: 72px; color: #6c757d; margin-bottom: 20px;">404</h1>
+        
+        <h2 style="color: #333; margin-bottom: 20px;">Page Not Found</h2>
+        
+        <p style="font-size: 18px; color: #666; margin-bottom: 30px;">
+            The page you're looking for doesn't exist or has been moved.
+        </p>
+        
+        <div style="margin-top: 30px;">
+            <a href="{{ url_for('search.index') }}" class="btn btn-primary" style="margin-right: 10px;">
+                <span class="glyphicon glyphicon-home"></span> Go to Home
+            </a>
+            
+            {% if request.referrer and request.referrer != request.url %}
+            <a href="{{ request.referrer }}" class="btn btn-default">
+                <span class="glyphicon glyphicon-arrow-left"></span> Go Back
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

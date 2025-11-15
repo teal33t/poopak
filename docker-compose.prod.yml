@@ -1,0 +1,417 @@
+version: '3.8'
+
+# Production Docker Compose Configuration
+# Optimized for production deployment with security and performance best practices
+
+networks:
+  app-tier:
+    driver: bridge
+    name: onion-crawler-prod
+  internal:
+    driver: bridge
+    internal: true
+    name: onion-crawler-internal
+
+volumes:
+  mongodb_data:
+    driver: local
+    name: onion-crawler-mongodb-prod
+  elasticsearch_data:
+    driver: local
+    name: onion-crawler-elasticsearch-prod
+  redis_data:
+    driver: local
+    name: onion-crawler-redis-prod
+
+services:
+  # Data Bus - Redis
+  redis:
+    image: bitnami/redis:7.2
+    container_name: onion-redis-prod
+    hostname: redis
+    restart: always
+    environment:
+      - ALLOW_EMPTY_PASSWORD=no
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-changeme123}
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL,CONFIG
+      - REDIS_MAXMEMORY=256mb
+      - REDIS_MAXMEMORY_POLICY=allkeys-lru
+    volumes:
+      - redis_data:/bitnami/redis/data
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-changeme123}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Database - MongoDB
+  mongodb:
+    image: mongo:7.0
+    container_name: onion-mongodb-prod
+    hostname: mongodb
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER:-admin}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD:-changeme123}
+      - MONGO_INITDB_DATABASE=crawler
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_data:/data/configdb
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Search Engine - Elasticsearch
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: onion-elasticsearch-prod
+    hostname: elasticsearch
+    restart: always
+    environment:
+      - node.name=elasticsearch
+      - cluster.name=onion-crawler-cluster
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - xpack.security.enrollment.enabled=false
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - bootstrap.memory_lock=true
+      - indices.query.bool.max_clause_count=4096
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=5s || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Tor Proxy Pool
+  torpool:
+    image: zeta0/alpine-tor:latest
+    container_name: onion-torpool-prod
+    hostname: torpool
+    restart: always
+    environment:
+      - tors=10
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:2090 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Screenshot Service - Splash
+  splash:
+    image: scrapinghub/splash:latest
+    container_name: onion-splash-prod
+    hostname: splash
+    restart: always
+    networks:
+      - internal
+    environment:
+      - SPLASH_MAXRSS=2048
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8050/_ping || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # NLP Service - SpaCy
+  spacy:
+    image: jgontrum/spacyapi:latest
+    container_name: onion-spacy-prod
+    hostname: spacy
+    restart: always
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:80/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Web Application
+  web-app:
+    build:
+      context: ./application
+      dockerfile: Dockerfile
+      target: production
+    image: onion-web-app:prod
+    container_name: onion-web-app-prod
+    hostname: web-app
+    restart: always
+    command: bash -c "/wait && gunicorn manage:app -b 0.0.0.0:8000 --workers 4 --threads 2 --worker-class gthread --timeout 120 --log-level info"
+    expose:
+      - "8000"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - app-tier
+      - internal
+    environment:
+      - FLASK_APP=web
+      - FLASK_ENV=production
+      - FLASK_DEBUG=0
+      - WAIT_HOSTS=mongodb:27017,redis:6379,elasticsearch:9200
+      - WAIT_HOSTS_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=5
+      - WAIT_BEFORE_HOSTS=25
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-changeme123}
+      - MONGO_ROOT_USER=${MONGO_ROOT_USER:-admin}
+      - MONGO_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD:-changeme123}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Nginx Web Server
+  server:
+    image: nginx:alpine
+    container_name: onion-nginx-prod
+    hostname: server
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./web-server/conf.d:/etc/nginx/conf.d:ro
+      - ./application/web/static:/application/static:ro
+    depends_on:
+      web-app:
+        condition: service_healthy
+    networks:
+      - app-tier
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:80/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Crawler Worker
+  crawler-worker:
+    build:
+      context: ./application
+      dockerfile: Dockerfile
+      target: production
+    image: onion-web-app:prod
+    container_name: onion-crawler-worker-prod
+    hostname: crawler-worker
+    restart: always
+    command: bash -c "/wait && python manage.py run_crawler_worker"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - internal
+    environment:
+      - WAIT_HOSTS=redis:6379,mongodb:27017,elasticsearch:9200
+      - WAIT_HOSTS_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=5
+      - WAIT_BEFORE_HOSTS=5
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-changeme123}
+      - MONGO_ROOT_USER=${MONGO_ROOT_USER:-admin}
+      - MONGO_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD:-changeme123}
+    healthcheck:
+      test: ["CMD-SHELL", "ps aux | grep '[p]ython manage.py run_crawler_worker' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Detector Worker
+  detector-worker:
+    build:
+      context: ./application
+      dockerfile: Dockerfile
+      target: production
+    image: onion-web-app:prod
+    container_name: onion-detector-worker-prod
+    hostname: detector-worker
+    restart: always
+    command: bash -c "/wait && python manage.py run_detector_worker"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - internal
+    environment:
+      - WAIT_HOSTS=redis:6379,mongodb:27017,elasticsearch:9200
+      - WAIT_HOSTS_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=5
+      - WAIT_BEFORE_HOSTS=5
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-changeme123}
+      - MONGO_ROOT_USER=${MONGO_ROOT_USER:-admin}
+      - MONGO_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD:-changeme123}
+    healthcheck:
+      test: ["CMD-SHELL", "ps aux | grep '[p]ython manage.py run_detector_worker' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # App Worker
+  app-worker:
+    build:
+      context: ./application
+      dockerfile: Dockerfile
+      target: production
+    image: onion-web-app:prod
+    container_name: onion-app-worker-prod
+    hostname: app-worker
+    restart: always
+    command: bash -c "/wait && python manage.py run_app_worker"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - internal
+    environment:
+      - WAIT_HOSTS=redis:6379,mongodb:27017,elasticsearch:9200
+      - WAIT_HOSTS_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=5
+      - WAIT_BEFORE_HOSTS=5
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-changeme123}
+      - MONGO_ROOT_USER=${MONGO_ROOT_USER:-admin}
+      - MONGO_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD:-changeme123}
+    healthcheck:
+      test: ["CMD-SHELL", "ps aux | grep '[p]ython manage.py run_app_worker' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Panel Worker
+  panel-worker:
+    build:
+      context: ./application
+      dockerfile: Dockerfile
+      target: production
+    image: onion-web-app:prod
+    container_name: onion-panel-worker-prod
+    hostname: panel-worker
+    restart: always
+    command: bash -c "/wait && python manage.py run_panel_worker"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - internal
+    environment:
+      - WAIT_HOSTS=redis:6379,mongodb:27017,elasticsearch:9200
+      - WAIT_HOSTS_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=5
+      - WAIT_BEFORE_HOSTS=5
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-changeme123}
+      - MONGO_ROOT_USER=${MONGO_ROOT_USER:-admin}
+      - MONGO_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD:-changeme123}
+    healthcheck:
+      test: ["CMD-SHELL", "ps aux | grep '[p]ython manage.py run_panel_worker' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

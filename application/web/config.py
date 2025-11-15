@@ -1,91 +1,24 @@
-n_per_page = 20
+"""
+Web application configuration module.
 
-redis_uri = 'redis://redis:6379'
-mongodb_uri = "mongodb://%s:%s@mongodb:27017/crawler" % ("admin", "123qwe")
+This module is deprecated. Please use application.config.settings instead.
+"""
 
-seed_upload_dir = "/application/files/seeds/"
-scr_upload_dir = "/application/files/screenshots/"
-spacy_server_url = "http://spacy:8000/dep/"
+from application.config import settings
+from application.config.constants import SPACY_TAG_MAP
 
-
-EXIF_PATH = "/application/files/exif/"
-
-localhost = False
-
-if localhost:
-	mongodb_uri = "mongodb://%s:%s@localhost:27017/crawler" % ("admin", "123qwe")
-	tor_pool_url = "localhost"
-	tor_pool_port = 9150
-	redis_uri = 'redis://localhost:6379'
-else:
-	mongodb_uri = "mongodb://%s:%s@mongodb:27017/crawler" % ("admin", "123qwe")
-	tor_pool_url = "torpool"
-	tor_pool_port = 5566
-	redis_uri = 'redis://redis:6379'
+# Backward compatibility - expose settings as module-level variables
+# Note: n_per_page, seed_upload_dir, and get_exif_save_path have been removed.
+# Use settings.ITEMS_PER_PAGE, settings.SEED_UPLOAD_DIR, and settings.get_exif_save_path() instead.
+redis_uri = settings.redis_uri
+mongodb_uri = settings.mongodb_uri
+scr_upload_dir = settings.SCREENSHOT_UPLOAD_DIR
+spacy_server_url = settings.SPACY_SERVER_URL
+EXIF_PATH = settings.EXIF_PATH
+localhost = settings.LOCALHOST
+tor_pool_url = settings.TOR_POOL_URL
+tor_pool_port = settings.TOR_POOL_PORT
 
 
-def get_exif_save_path(filename, ext):
-	return "%s%s%s" % (EXIF_PATH, filename, ext)
-
-
-SPACY_TAG_MAP = {
-    ".", #        {POS: PUNCT, "PunctType", # "peri"},
-    ",", #        {POS: PUNCT, "PunctType", # "comm"},
-    "-LRB-", #    {POS: PUNCT, "PunctType", # "brck", "PunctSide", # "ini"},
-    "-RRB-", #    {POS: PUNCT, "PunctType", # "brck", "PunctSide", # "fin"},
-    "``", #       {POS: PUNCT, "PunctType", # "quot", "PunctSide", # "ini"},
-    "\"\"", #     {POS: PUNCT, "PunctType", # "quot", "PunctSide", # "fin"},
-    "''", #       {POS: PUNCT, "PunctType", # "quot", "PunctSide", # "fin"},
-    ", #", #        {POS: PUNCT},
-    "$", #        {POS: SYM, "Other", # {"SymType", # "currency"}},
-    "#", #        {POS: SYM, "Other", # {"SymType", # "numbersign"}},
-    "AFX", #      {POS: ADJ,  "Hyph", # "yes"},
-    "CC", #       {POS: CCONJ, "ConjType", # "coor"},
-    "CD", #       {POS: NUM, "NumType", # "card"},
-    "DT", #       {POS: DET},
-    "EX", #       {POS: ADV, "AdvType", # "ex"},
-    "FW", #       {POS: X, "Foreign", # "yes"},
-    "HYPH", #     {POS: PUNCT, "PunctType", # "dash"},
-    "IN", #       {POS: ADP},
-    "JJ", #       {POS: ADJ, "Degree", # "pos"},
-    "JJR", #      {POS: ADJ, "Degree", # "comp"},
-    "JJS", #      {POS: ADJ, "Degree", # "sup"},
-    "LS", #       {POS: PUNCT, "NumType", # "ord"},
-    "MD", #       {POS: VERB, "VerbType", # "mod"},
-    "NIL", #      {POS: ""},
-    "NN", #       {POS: NOUN, "Number", # "sing"},
-    "NNP", #      {POS: PROPN, "NounType", # "prop", "Number", # "sing"},
-    "NNPS", #     {POS: PROPN, "NounType", # "prop", "Number", # "plur"},
-    "NNS", #      {POS: NOUN, "Number", # "plur"},
-    "PDT", #      {POS: ADJ, "AdjType", # "pdt", "PronType", # "prn"},
-    "POS", #      {POS: PART, "Poss", # "yes"},
-    "PRP", #      {POS: PRON, "PronType", # "prs"},
-    "PRP$", #     {POS: ADJ, "PronType", # "prs", "Poss", # "yes"},
-    "RB", #       {POS: ADV, "Degree", # "pos"},
-    "RBR", #      {POS: ADV, "Degree", # "comp"},
-    "RBS", #      {POS: ADV, "Degree", # "sup"},
-    "RP", #       {POS: PART},
-    "SP", #       {POS: SPACE},
-    "SYM", #      {POS: SYM},
-    "TO", #       {POS: PART, "PartType", # "inf", "VerbForm", # "inf"},
-    "UH", #       {POS: INTJ},
-    "VB", #       {POS: VERB, "VerbForm", # "inf"},
-    "VBD", #      {POS: VERB, "VerbForm", # "fin", "Tense", # "past"},
-    "VBG", #      {POS: VERB, "VerbForm", # "part", "Tense", # "pres", "Aspect", # "prog"},
-    "VBN", #      {POS: VERB, "VerbForm", # "part", "Tense", # "past", "Aspect", # "perf"},
-    "VBP", #      {POS: VERB, "VerbForm", # "fin", "Tense", # "pres"},
-    "VBZ", #      {POS: VERB, "VerbForm", # "fin", "Tense", # "pres", "Number", # "sing", "Person", # 3},
-    "WDT", #      {POS: ADJ, "PronType", # "int|rel"},
-    "WP", #       {POS: NOUN, "PronType", # "int|rel"},
-    "WP$", #      {POS: ADJ, "Poss", # "yes", "PronType", # "int|rel"},
-    "WRB", #      {POS: ADV, "PronType", # "int|rel"},
-    "ADD", #      {POS: X},
-    "NFP", #      {POS: PUNCT},
-    "GW", #       {POS: X},
-    "XX", #       {POS: X},
-    "BES",
-    "HVS",
-    "_SP",
-}
-
-
+# Re-export SPACY_TAG_MAP from constants for backward compatibility
+__all__ = ["SPACY_TAG_MAP"]

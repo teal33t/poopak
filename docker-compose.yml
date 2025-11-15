@@ -1,15 +1,27 @@
-version: '3'
+version: '3.8'
 
-# NGINX
-# FLASK
-# MONGODB
-# MONGO-ADMINPANEL
-# REDIS
-# WORKERS
-# TOR + HA PROXY
-# [-] MONGOCLIENT
-# SPLASH
-# SPACY
+# LEGACY Docker Compose Configuration
+# 
+# NOTE: This file is maintained for backward compatibility.
+# For new deployments, please use:
+#   - docker-compose.dev.yml for development
+#   - docker-compose.prod.yml for production
+#
+# Usage:
+#   Development: docker-compose -f docker-compose.dev.yml up
+#   Production:  docker-compose -f docker-compose.prod.yml up
+#
+# Services:
+# - NGINX (Web Server)
+# - FLASK (Web Application)
+# - MONGODB (Database)
+# - MONGO-ADMINPANEL (Database Admin UI)
+# - REDIS (Message Queue)
+# - WORKERS (Background Workers)
+# - TOR + HA PROXY (Tor Network Access)
+# - SPLASH (Screenshot Service)
+# - SPACY (NLP Service)
+# - ELASTICSEARCH (Search Engine)
 
 networks:
   app-tier:
@@ -17,6 +29,8 @@ networks:
 
 volumes:
   mongodb_data:
+    driver: local
+  elasticsearch_data:
     driver: local
 
 services:
@@ -52,6 +66,27 @@ services:
         # - MONGODB_DATABASE=crawler
     networks:
       - app-tier
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    hostname: elasticsearch
+    container_name: elasticsearch
+    restart: always
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      - app-tier
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   torpool:
     image: 'zeta0/alpine-tor'
@@ -117,6 +152,7 @@ services:
        - mongodb
        - torpool
        - redis
+       - elasticsearch
        - crawler-worker
        - detector-worker
        - app-worker
@@ -144,6 +180,7 @@ services:
       - torpool
       - redis
       - mongodb
+      - elasticsearch
      environment:
       WAIT_HOSTS: redis:6379
       WAIT_BEFORE_HOSTS: 5
@@ -165,6 +202,7 @@ services:
       - torpool
       - redis
       - mongodb
+      - elasticsearch
      environment:
       WAIT_HOSTS: redis:6379
       WAIT_BEFORE_HOSTS: 5
@@ -184,6 +222,7 @@ services:
       - torpool
       - redis
       - mongodb
+      - elasticsearch
      environment:
       WAIT_HOSTS: redis:6379
       WAIT_BEFORE_HOSTS: 5
@@ -204,6 +243,7 @@ services:
       - torpool
       - redis
       - mongodb
+      - elasticsearch
      environment:
       WAIT_HOSTS: redis:6379
       WAIT_BEFORE_HOSTS: 5
