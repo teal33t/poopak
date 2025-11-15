@@ -215,13 +215,6 @@ application/
     └── templates/       # HTML templates
 ```
 
-### Adding New Features
-
-1. Define requirements in `.kiro/specs/<feature>/requirements.md`
-2. Create design in `.kiro/specs/<feature>/design.md`
-3. Break down tasks in `.kiro/specs/<feature>/tasks.md`
-4. Implement following the task list
-
 ### Testing
 
 ```bash
@@ -285,7 +278,6 @@ Looking for open-source developers to work together on PoopakV2. Interested? Con
 1. Check logs: `make dev-logs`
 2. Check health: `make health`
 3. Verify setup: `./validate-docker-setup.sh`
-4. Review documentation in `.kiro/specs/`
 
 ---
 
